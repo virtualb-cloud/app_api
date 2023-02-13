@@ -1,7 +1,7 @@
 # Allianz v2.0
 
 import numpy as np
-from modules.questionnaire_contents import Contenter
+from app.questionnaire_contents import Contenter
 
 class Observer:
 

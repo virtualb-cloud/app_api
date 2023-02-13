@@ -2,8 +2,8 @@
 
 import json
 from scipy.stats import beta
-from modules.questionnaire_contents import Contenter
-from modules.questionnaire_observations import Observer
+from app.questionnaire_contents import Contenter
+from app.questionnaire_observations import Observer
 
 import requests
 import json
