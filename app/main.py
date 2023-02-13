@@ -10,7 +10,6 @@ from app.questionnaire_main import Questionnaire
 
 # Config
 app = Flask(__name__)
-app.config['ENV'] = 'development'
 
 @app.route("/questionnaire_interpreter", methods=["POST"])
 def questionnaire_interpreter():
