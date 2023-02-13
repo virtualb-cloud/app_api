@@ -6,8 +6,8 @@ from app.questionnaire_main import Questionnaire
 # Config
 app = Flask(__name__)
 
-@app.route("/questionnaire", methods=["POST"])
-def questionnaire():
+@app.route("/questionnaire_interpreter", methods=["POST"])
+def questionnaire_interpreter():
     
     if request.method == "POST":
 

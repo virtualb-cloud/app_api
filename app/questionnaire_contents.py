@@ -6,48 +6,7 @@ class Contenter:
 
     def __init__(self) -> None:
             
-        self.MIFID_2018_columns =[
-            'ETA', 'SESSO_B', 'PROV_T', 'PROFESSIONE_S', 'TAE_T', 'CAP_S',
-            'VAL_DOMANDA_S1_1', 'VAL_DOMANDA_S1_2', 'VAL_DOMANDA_S1_3',
-            'VAL_DOMANDA_S1_4', 'VAL_DOMANDA_S2_5A_1', 'VAL_DOMANDA_S2_5A_2',
-            'VAL_DOMANDA_S2_5A_3', 'VAL_DOMANDA_S2_5A_4', 'VAL_DOMANDA_S2_5A_5',
-            'VAL_DOMANDA_S2_5A_6', 'VAL_DOMANDA_S2_5A_7', 'VAL_DOMANDA_S2_5A_8',
-            'VAL_DOMANDA_S2_5A_9', 'VAL_DOMANDA_S2_5A_10', 'VAL_DOMANDA_S2_5A_11',
-            'VAL_DOMANDA_S2_5A_12', 'VAL_DOMANDA_S2_5B_1', 'VAL_DOMANDA_S2_5B_2',
-            'VAL_DOMANDA_S2_5B_3', 'VAL_DOMANDA_S2_5B_4', 'VAL_DOMANDA_S2_5B_5',
-            'VAL_DOMANDA_S2_5B_6', 'VAL_DOMANDA_S2_5B_7', 'VAL_DOMANDA_S2_5B_8',
-            'VAL_DOMANDA_S2_5B_9', 'VAL_DOMANDA_S2_5B_10', 'VAL_DOMANDA_S2_5B_11',
-            'VAL_DOMANDA_S2_5B_12', 'VAL_DOMANDA_S2_6_1', 'VAL_DOMANDA_S2_6_2',
-            'VAL_DOMANDA_S2_6_3', 'VAL_DOMANDA_S2_6_4',  'VAL_DOMANDA_S2_7', 
-            'VAL_DOMANDA_S2_8', 'VAL_DOMANDA_S3_9', 'VAL_DOMANDA_S3_10',
-            'VAL_DOMANDA_S3_11', 'VAL_DOMANDA_S3_12', 'VAL_DOMANDA_S4_13_1', 
-            'VAL_DOMANDA_S4_13_2', 'VAL_DOMANDA_S4_13_3', 'VAL_DOMANDA_S4_14_1',
-            'VAL_DOMANDA_S4_14_2', 'VAL_DOMANDA_S4_14_3',
-            'VAL_DOMANDA_S4_14_4', 'VAL_DOMANDA_S4_15', 
-        ]
-        self.MIFID_2020_columns = [
-            'NASCITA_FIGLIO_1_MU20', 
-            'NASCITA_FIGLIO_2_MU20',
-            'NASCITA_FIGLIO_3_MU20', 
-            'NASCITA_FIGLIO_4_MU20',
-            'NASCITA_FIGLIO_5_MU20', 
-            'NASCITA_FIGLIO_6_MU20',
-            'VAL_DOMANDA_S2_7_MU20',
-            'VAL_DOMANDA_S2_8_MU20', 
-            'VAL_DOMANDA_S2_9_MU20',
-            'VAL_DOMANDA_S2_10_MU20'
-            'VAL_DOMANDA_S4_13_1', 
-            'VAL_DOMANDA_S4_13_2', 
-            'VAL_DOMANDA_S4_13_3',
-            'VAL_DOMANDA_S4_17_4_MU20', 
-            'VAL_DOMANDA_S4_17_5_MU20', 
-            'VAL_DOMANDA_S4_18_MU20'
-        ]
-        self.MIFID_2022_columns = [
-            "VAL_DOMANDA_S5_21_MU22",
-            "VAL_DOMANDA_S5_22_MU22",
-            "VAL_DOMANDA_S5_23_MU22"
-        ]
+        pass
 
 
 # 1) socio demographics:
