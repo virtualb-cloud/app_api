@@ -1,6 +1,5 @@
 # Allianz v2.0
 
-import pandas as pd
 import numpy as np
 
 class Contenter:
@@ -788,8 +787,6 @@ class Contenter:
         return result
 
     def v1_ordinal_objective_time_horizon(self, person:dict):
-        
-        df = pd.DataFrame()
         
         max, liquidity = self.v1_ordinal_subjective_liquidity_investment_need(person=person)
         max, capital = self.v1_ordinal_subjective_capital_accumulation_investment_need(person=person)

@@ -1,8 +1,6 @@
 # Allianz v2.0
 
 import json
-import numpy as np
-import pandas as pd
 from scipy.stats import beta
 from modules.questionnaire_contents import Contenter
 from modules.questionnaire_observations import Observer
@@ -239,7 +237,7 @@ class Questionnaire:
             
         return answer
 
-    def run(self, people:list) -> pd.DataFrame:
+    def run(self, people:list):
 
         outputs = []
 

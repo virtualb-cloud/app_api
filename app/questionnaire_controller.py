@@ -1,8 +1,5 @@
 # ALLIANZ V2_0
 
-import pandas as pd
-import numpy as np
-
 class Mifid_controller:
 
     def __init__(self) -> None:

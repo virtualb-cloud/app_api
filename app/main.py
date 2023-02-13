@@ -4,8 +4,8 @@ from scipy.stats import beta
 import pandas as pd
 import numpy as np
 from flask import Flask, request, jsonify
-from modules.questionnaire_controller import Mifid_controller
-from modules.questionnaire_main import Questionnaire
+from app.questionnaire_controller import Mifid_controller
+from app.questionnaire_main import Questionnaire
 
 
 # Config
