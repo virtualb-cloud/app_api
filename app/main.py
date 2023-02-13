@@ -24,10 +24,3 @@ def questionnaire_interpreter():
         except:
             answer = []
         return jsonify(answer), 200
-
-@app.route("/", methods=["GET"])
-def test():
-    
-    if request.method == "GET":
-
-        return "app is working", 200
