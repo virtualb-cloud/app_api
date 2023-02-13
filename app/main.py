@@ -27,3 +27,10 @@ def questionnaire_interpreter():
         answer = interpreter.run(response[0])
 
         return jsonify(answer), 200
+
+@app.route("/", methods=["GET"])
+def test():
+    
+    if request.method == "GET":
+
+        return "app is working", 200
