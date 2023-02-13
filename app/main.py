@@ -23,9 +23,11 @@ def questionnaire_interpreter():
         response = controller.run(people=body)
         if response[0] == []: return jsonify(response[1]), 422
 
-        interpreter = Questionnaire()
-        answer = interpreter.run(response[0])
-
+        try:
+            interpreter = Questionnaire()
+            answer = interpreter.run(response[0])
+        except:
+            answer = []
         return jsonify(answer), 200
 
 @app.route("/", methods=["GET"])
