@@ -1,12 +1,12 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 class Delete:
 
     def __init__(self) -> None:
         
         # db connection
-        self.schema_name = "data_enrichment_v3"
-        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-data-enrichment.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
+        self.schema_name = "mainapp"
+        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
   
     def run(self, body:dict):
 
@@ -15,17 +15,17 @@ class Delete:
         if len(ids) == 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.sociodemographics as sd
-            WHERE sd.person_id = {ids[0]}
+            DELETE FROM {self.schema_name}.hub_customer
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.sociodemographics as sd
-            WHERE sd.person_id in {tuple(ids)}
+            DELETE FROM {self.schema_name}.hub_customer
+            WHERE person_id in {tuple(ids)}
             '''
 
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
   
         return True

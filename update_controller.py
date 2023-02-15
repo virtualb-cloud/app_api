@@ -1,6 +1,6 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
-class Insert_controller:
+class Update_controller:
 
     def __init__(self) -> None:
 
@@ -9,20 +9,22 @@ class Insert_controller:
 
         # db connection
         self.schema_name = "mainapp"
-        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-maipapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
+        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
         # person id
-
         query = f'''
         SELECT person_id
-        FROM {self.schema_name}.sociodemographics
+        FROM {self.schema_name}.hub_customer
         '''
     
-        response = self.engine.connect().execute(statement=text(query))
-        self.person_ids = response.fetchall()
+        response = self.engine.connect().execute(statement=query)
+        person_ids = response.fetchall()
 
-        if self.person_id == None: self.person_ids = []
-        pass
+        self.person_ids = []
+        if person_ids == None: self.person_ids = []
+        else:
+            for item in person_ids:
+                self.person_ids.append(item[0])
     
     def first_necessary_keys_controller(self, person:dict):
 
@@ -33,12 +35,12 @@ class Insert_controller:
         # controll "id"
 
         if not "id" in person.keys(): 
-            errors += "try sending an id for each record" 
+            errors += "try sending an id for each record. " 
             flag = False
         
-        elif person["id"] in self.person_ids:
+        elif not person["id"] in self.person_ids:
             flag = False
-            errors += f"person_id {person['id']} exists in db, use update instead." 
+            errors += f"person_id '{person['id']}' does not exist in db. " 
 
         return flag, errors
 
@@ -78,7 +80,7 @@ class Insert_controller:
         for key in mandatory_keys :
             if not key in person["sociodemographics"].keys(): 
                 flag = False
-                errors += f"try sending {key} as a sociodemographics dictionary key"
+                errors += f"try sending '{key}' as a sociodemographics dictionary key. "
 
         return flag, errors
 
@@ -110,25 +112,29 @@ class Insert_controller:
         errors = ""
 
         # check if necessary variables exist
-        if (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
+        if not type(person["sociodemographics"]["age"]) in [int, float]:
             flag = False
-            errors += f"try sending sociodemographics age variable in this limits: {age_limits}"
+            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
+        
+        elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
+            flag = False
+            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
         
         elif not person["sociodemographics"]["gender"] in gender_limits: 
             flag = False
-            errors += f"try sending sociodemographics gender variable in this limits: {gender_limits}"
+            errors += f"try sending sociodemographics gender variable in this limits: '{gender_limits}'. "
 
         elif not person["sociodemographics"]["location"] in location_limits: 
             flag = False
-            errors += f"try sending sociodemographics location variable in this limits: {location_limits}"
+            errors += f"try sending sociodemographics location variable in this limits: '{location_limits}'. "
 
         elif not person["sociodemographics"]["profession"] in profession_limits: 
             flag = False
-            errors += f"try sending sociodemographics profession variable in this limits: {profession_limits}"
+            errors += f"try sending sociodemographics profession variable in this limits: '{profession_limits}'. "
 
         elif not person["sociodemographics"]["education"] in education_limits: 
             flag = False
-            errors += f"try sending sociodemographics education variable in this limits: {education_limits}"
+            errors += f"try sending sociodemographics education variable in this limits: '{education_limits}'. "
 
         return flag, errors
 
@@ -136,7 +142,7 @@ class Insert_controller:
         
         # optional variables
         optional_keys = [
-            "financial_horizon_index", "finacial_littercay_index", 
+            "financial_horizon_index", "financial_litteracy_index", 
             "financial_experience_index", "objective_risk_propensity_index", 
             "subjective_risk_propensity_index", "esg_propensity_index",
             "life_quality_index", "sophisticated_instrument", "marginality_index"
@@ -148,17 +154,17 @@ class Insert_controller:
 
         if person["cultures"] == {}:
             flag = False
-            errors += f"try sending at least one of {optional_keys} as cultures dictionary keys"
+            errors += f"try sending at least one of '{optional_keys}' as cultures dictionary keys. "
 
         for key in person["cultures"].keys():
 
             if not key in optional_keys:
                 flag = False
-                errors += f"try sending only {optional_keys} as cultures dictionary keys"
+                errors += f"try sending only '{optional_keys}' as cultures dictionary keys. "
 
             elif (person["cultures"][key] < 0) | (person["cultures"][key] > 1): 
                 flag = False
-                errors += f"try sending a value in [0, 1] range as cultures dictionary values"
+                errors += f"try sending a value in [0, 1] range as cultures dictionary values. "
 
         return flag, errors
 
@@ -177,17 +183,17 @@ class Insert_controller:
 
         if person["status"] == {}:
             flag = False
-            errors += f"try sending at least one of {optional_keys} as status dictionary keys"
+            errors += f"try sending at least one of '{optional_keys}' as status dictionary keys. "
 
         for key in person["status"].keys():
 
             if not key in optional_keys:
                 flag = False
-                errors += f"try sending only {optional_keys} as status dictionary keys"
+                errors += f"try sending only '{optional_keys}' as status dictionary keys. "
 
             elif (person["status"][key] < 0) | (person["status"][key] > 1): 
                 flag = False
-                errors += f"try sending a value in [0, 1] range as status dictionary values"
+                errors += f"try sending a value in [0, 1] range as status dictionary values. "
 
         return flag, errors
             
@@ -205,17 +211,17 @@ class Insert_controller:
 
         if person["attitudes"] == {}:
             flag = False
-            errors += f"try sending at least one of {optional_keys} as attitudes dictionary keys"
+            errors += f"try sending at least one of '{optional_keys}' as attitudes dictionary keys. "
 
         for key in person["attitudes"].keys():
 
             if not key in optional_keys:
                 flag = False
-                errors += f"try sending only {optional_keys} as attitudes dictionary keys"
+                errors += f"try sending only '{optional_keys}' as attitudes dictionary keys. "
 
             elif (person["attitudes"][key] < 0) | (person["attitudes"][key] > 1): 
                 flag = False
-                errors += f"try sending a value in [0, 1] range as attitudes dictionary values"
+                errors += f"try sending a value in [0, 1] range as attitudes dictionary values. "
 
         return flag, errors
 
@@ -237,17 +243,17 @@ class Insert_controller:
 
         if person["needs"] == {}:
             flag = False
-            errors += f"try sending at least one of {optional_keys} as needs dictionary keys"
+            errors += f"try sending at least one of '{optional_keys}' as needs dictionary keys. "
 
         for key in person["needs"].keys():
 
             if not key in optional_keys:
                 flag = False
-                errors += f"try sending only {optional_keys} as needs dictionary keys"
+                errors += f"try sending only '{optional_keys}' as needs dictionary keys. "
 
             elif (person["needs"][key] < 0) | (person["needs"][key] > 1): 
                 flag = False
-                errors += f"try sending a value in [0, 1] range as needs dictionary values"
+                errors += f"try sending a value in [0, 1] range as needs dictionary values. "
 
         return flag, errors
 
@@ -259,21 +265,21 @@ class Insert_controller:
 
         if type(people) != list:
             flag = False
-            errors += "try sending a body [{rescord1}, ..., {rescordn}]"
+            errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
             return flag, errors
         
         for person in people:
             
             if type(person) != dict:
                 flag = False
-                errors += "try sending a body [{rescord1}, ..., {rescordn}]"
+                errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
                 return flag, errors
             
-            all_keys = ["id", "sociodemographics", "attitudes", "cultures", "status"]
+            all_keys = ["id", "sociodemographics", "attitudes", "cultures", "status", "needs"]
             for key in person.keys():
                 if not key in all_keys:
                     flag = False
-                    errors += f"try sending only {all_keys} as record dictionary keys"
+                    errors += f"try sending only '{all_keys}' as record dictionary keys. "
                     return flag, errors
                 
             # necessary keys
@@ -292,8 +298,9 @@ class Insert_controller:
                 if v == True: sign = 1
             
             if sign == 0:
-                errors += errs 
-                errors += + f"error seen at id = {person_id}"
+                flag = False
+                errors = f"try sending at least one of '{all_keys[1:]}'. "
+                errors +=  f"error seen at id = '{person_id}'. "
                 return flag, errors
 
             # control sociodemographics if exists
@@ -303,14 +310,14 @@ class Insert_controller:
                 flag, errors = self.sociodemographics_keys_controller(person=person)
                 if not flag: 
                     errors += errs 
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
 
                 # control sociodemographics values
                 flag, errors = self.sociodemographics_values_controller(person=person)
                 if not flag: 
                     errors += errs
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
 
             # control cultures if exists
@@ -318,7 +325,7 @@ class Insert_controller:
                 flag, errors = self.cultures_controller(person=person)
                 if not flag: 
                     errors += errs
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
 
             # control status if exists
@@ -326,7 +333,7 @@ class Insert_controller:
                 flag, errors = self.status_controller(person=person)
                 if not flag: 
                     errors += errs
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
             
             # control attitudes if exists
@@ -334,7 +341,7 @@ class Insert_controller:
                 flag, errors = self.attitudes_controller(person=person)
                 if not flag: 
                     errors += errs
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
 
             # control needs if exists
@@ -342,7 +349,7 @@ class Insert_controller:
                 flag, errors = self.needs_controller(person=person)
                 if not flag: 
                     errors += errs
-                    errors += + f"error seen at id = {person_id}"
+                    errors +=  f"error seen at id = '{person_id}'. "
                     return flag, errors
 
         return flag, errors

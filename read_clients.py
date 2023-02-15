@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
 class Read:
 
@@ -6,19 +6,21 @@ class Read:
         
         # db connection
         self.schema_name = "mainapp"
-        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-maipapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
+        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
     
     def socio_demographics(self, ids:list):
 
         query = f'''
         SELECT person_id, age_, gender_, location_, education_, profession_
 
-        FROM {self.schema_name}.sociodemographics
+        FROM {self.schema_name}.hub_customer
         '''
+        if ids == []:
+            query = query 
 
-        if len(ids) == 1:
+        elif len(ids) == 1:
             query = query + f'''
-            WHERE person_id = {ids[0]}
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
@@ -26,7 +28,7 @@ class Read:
             WHERE person_id in {tuple(ids)}
             '''
 
-        data = self.engine.connect().execute(statement=text(query))
+        data = self.engine.connect().execute(statement=query)
 
         new_people = {}
         for person in data:
@@ -53,12 +55,15 @@ class Read:
         retirement_investment_need, income_investment_need, 
         heritage_investment_need, liquidity_investment_need
 
-        FROM {self.schema_name}.needs
+        FROM {self.schema_name}.cust_needs
         '''
 
-        if len(ids) == 1:
+        if ids == []:
+            query = query 
+
+        elif len(ids) == 1:
             query = query + f'''
-            WHERE person_id = {ids[0]}
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
@@ -66,7 +71,7 @@ class Read:
             WHERE person_id in {tuple(ids)}
             '''
 
-        data = self.engine.connect().execute(statement=text(query))
+        data = self.engine.connect().execute(statement=query)
 
         new_people = {}
         for person in data:
@@ -99,12 +104,14 @@ class Read:
         net_income_index, net_savings_index,
         net_expences_index
 
-        FROM {self.schema_name}.status
+        FROM {self.schema_name}.cust_status
         '''
+        if ids == []:
+            query = query 
 
-        if len(ids) == 1:
+        elif len(ids) == 1:
             query = query + f'''
-            WHERE person_id = {ids[0]}
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
@@ -112,7 +119,7 @@ class Read:
             WHERE person_id in {tuple(ids)}
             '''
 
-        data = self.engine.connect().execute(statement=text(query))
+        data = self.engine.connect().execute(statement=query)
 
         new_people = {}
         for person in data:
@@ -137,15 +144,17 @@ class Read:
         query = f'''
         SELECT person_id,
         bank_activity_index, digital_activity_index,
-        cultural_activity_index, charity_activity_index,
+        cultural_activity_index, charity_activity_index
 
-        FROM {self.schema_name}.attitudes AS sd
-
+        FROM {self.schema_name}.cust_attitudes
         '''
 
-        if len(ids) == 1:
+        if ids == []:
+            query = query 
+
+        elif len(ids) == 1:
             query = query + f'''
-            WHERE person_id = {ids[0]}
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
@@ -153,7 +162,7 @@ class Read:
             WHERE person_id in {tuple(ids)}
             '''
 
-        data = self.engine.connect().execute(statement=text(query))
+        data = self.engine.connect().execute(statement=query)
 
         new_people = {}
         for person in data:
@@ -172,26 +181,28 @@ class Read:
     def cultures(self, ids:list):
         
         query = f'''
-        SELECT person_id
-        financial_horizon_index, finacial_littercay_index, 
+        SELECT person_id,
+        financial_horizon_index, financial_litteracy_index, 
         financial_experience_index, objective_risk_propensity_index, 
         subjective_risk_propensity_index, esg_propensity_index,
         life_quality_index, sophisticated_instrument, marginality_index
 
-        FROM {self.schema_name}.cultures
+        FROM {self.schema_name}.cust_cultures
         '''
 
-        if len(ids) == 1:
+        if ids == []:
+            query = query 
+
+        elif len(ids) == 1:
             query = query + f'''
-            WHERE person_id = {ids[0]}
+            WHERE person_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
             query = query + f'''
             WHERE person_id in {tuple(ids)}
             '''
-
-        data = self.engine.connect().execute(statement=text(query))
+        data = self.engine.connect().execute(statement=query)
 
         new_people = {}
         for person in data:
@@ -224,7 +235,25 @@ class Read:
             "cultures" : False,
             "attitudes" : False,
             "needs" : False
-            } 
+            }
+
+        if categories == []:
+            
+            flags["sociodemographics"] = True
+            people_sociodemo = self.socio_demographics(ids=ids)
+
+            flags["cultures"] = True
+            people_cultures = self.cultures(ids=ids)
+
+            flags["status"] = True
+            people_status = self.status(ids=ids)
+
+            flags["needs"] = True
+            people_needs = self.needs(ids=ids)
+
+            flags["attitudes"] = True
+            people_attitudes = self.attitudes(ids=ids)
+
         if "sociodemographics" in categories:
             flags["sociodemographics"] = True
             people_sociodemo = self.socio_demographics(ids=ids)
@@ -247,7 +276,7 @@ class Read:
 
         people = []
 
-        for id in ids:
+        for id in people_sociodemo.keys():
             
             person = {
                 "id" : id

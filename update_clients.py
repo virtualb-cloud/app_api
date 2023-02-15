@@ -1,19 +1,19 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
-class Insert:
+class Update:
 
     def __init__(self) -> None:
         
         # db connection
         self.schema_name = "mainapp"
-        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-maipapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
+        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
 
     def update_person_sociodemographics(self, person:dict):
         
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.sociodemographics
+        UPDATE {self.schema_name}.hub_customer
         SET 
         '''
         set_query = ""
@@ -28,14 +28,17 @@ class Insert:
         for key in keys_list:
 
             if key in record.keys(): 
-                set_query += f'''({key}_ = {record[key]}),'''
+                if key == "age":
+                    set_query += f'''{key}_ = {record[key]},'''
+                else: 
+                    set_query += f'''{key}_ = '{record[key]}','''
 
         # to exclude the last ","
-        query = query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = {record['person_id']}" 
+        set_query = set_query[:-1]
+        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
 
         # execute the query
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
 
         return True
 
@@ -43,7 +46,7 @@ class Insert:
 
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.cultures
+        UPDATE {self.schema_name}.cust_cultures
         SET 
         '''
         set_query = ""
@@ -61,14 +64,14 @@ class Insert:
         for key in keys_list:
 
             if key in record.keys(): 
-                set_query += f'''({key} = {record[key]}),'''
+                set_query += f'''{key} = {record[key]},'''
 
         # to exclude the last ","
-        query = query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = {record['person_id']}" 
+        set_query = set_query[:-1]
+        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
 
         # execute the query
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
 
         return True
 
@@ -76,7 +79,7 @@ class Insert:
 
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.status
+        UPDATE {self.schema_name}.cust_status
         SET 
         '''
         set_query = ""
@@ -93,14 +96,14 @@ class Insert:
         for key in keys_list:
 
             if key in record.keys(): 
-                set_query += f'''({key} = {record[key]}),'''
+                set_query += f''' {key} = {record[key]},'''
 
         # to exclude the last ","
-        query = query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = {record['person_id']}" 
+        set_query = set_query[:-1]
+        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
 
         # execute the query
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
 
         return True
 
@@ -108,7 +111,7 @@ class Insert:
         
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.attitudes
+        UPDATE {self.schema_name}.cust_attitudes
         SET 
         '''
         set_query = ""
@@ -123,15 +126,15 @@ class Insert:
         for key in keys_list:
 
             if key in record.keys(): 
-                set_query += f'''({key} = {record[key]}),'''
+                set_query += f'''{key} = {record[key]},'''
 
 
         # to exclude the last ","
-        query = query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = {record['person_id']}" 
+        set_query = set_query[:-1]
+        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
 
         # execute the query
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
 
         return True
 
@@ -139,7 +142,7 @@ class Insert:
         
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.needs
+        UPDATE {self.schema_name}.cust_needs
         SET 
         '''
         set_query = ""
@@ -157,14 +160,14 @@ class Insert:
         for key in keys_list:
 
             if key in record.keys(): 
-                set_query += f'''({key} = {record[key]}),'''
+                set_query += f'''{key} = {record[key]},'''
 
         # to exclude the last ","
-        query = query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = {record['person_id']}" 
+        set_query = set_query[:-1]
+        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
 
         # execute the query
-        self.engine.connect().execute(statement=text(query))
+        self.engine.connect().execute(statement=query)
 
         return True
 
