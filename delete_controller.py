@@ -37,6 +37,7 @@ class Delete_controller:
         first_keys = ["ids"]
 
         for key in first_keys:
+
             if not key in body.keys(): 
                 flag = False
                 errors += f"please consider sending '{first_keys}' as body dictionary keys. "
@@ -49,7 +50,11 @@ class Delete_controller:
                 if not id in self.person_ids:
                     flag = False
                     errors += f"person_id '{id}' does not exist in db. " 
-                    
+            
+            if body[key] == []:
+                flag = False 
+                errors += f"please consider sending a list of ids as '{key}' value. "
+            
         return flag, errors
 
     def run(self, body:dict):
