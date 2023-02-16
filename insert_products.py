@@ -17,13 +17,20 @@ class Insert:
                 product_id, name_, isin_code, bloomberg_id, currency
             )
             VALUES '''
-        
+            
+        keys_list = [
+            "name", "isin_code", "bloomberg_id", "currency"
+            ]
         # add the data to query
         for product in products:
 
             product_id = product["id"]
             
             record = product["description"]
+
+            # control keys
+            for key in keys_list:
+                if not key in record.keys(): record[key] = "NULL"
 
             add_statement = f'''('{product_id}', '{record["name"]}', '{record["isin_code"]}',
             '{record["bloomberg_id"]}', '{record["currency"]}'),'''

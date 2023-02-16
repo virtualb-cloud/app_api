@@ -44,11 +44,6 @@ class Insert_controller:
             flag = False
             errors += f"product_id '{product['id']}' exists in db, use update instead. " 
 
-        # controll "description"
-        elif not "description" in product.keys(): 
-            flag = False
-            errors += "try sending description dictionary for each record. " 
-
         return flag, errors
 
     def first_optional_keys_controller(self, product:dict):
@@ -68,7 +63,7 @@ class Insert_controller:
     def description_keys_controller(self, product:dict):
         
         # mandatory variables
-        mandatory_keys = [
+        optional_keys = [
             "name", "isin_code", "bloomberg_id", "currency"
         ]
 
@@ -76,16 +71,18 @@ class Insert_controller:
         flag = True
         errors = ""
 
-        # flag True means to have necessary input data
-        flag = True
+        if product["description"] == {}:
+            flag = False
+            errors += f"try sending at least one of '{optional_keys}' as description dictionary keys. "
 
-        # check if necessary keys exist
-        for key in mandatory_keys :
-            if not key in product["description"].keys(): 
+        for key in product["description"].keys():
+
+            if not key in optional_keys:
                 flag = False
-                errors += f"try sending '{key}' as a description dictionary key. "
+                errors += f"try sending '{optional_keys}' as description dictionary keys. "
 
         return flag, errors
+
 
     def cultures_controller(self, product:dict):
         
