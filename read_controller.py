@@ -55,7 +55,7 @@ class Read_controller:
                         flag = False
                         errors += f"product_id '{id}' does not exist in db. " 
             
-            if key == "categories":
+            elif key == "categories":
                 for category in body[key]:
                     if not category in categories:
                         flag = False

@@ -198,6 +198,7 @@ class Read:
             
             flags["description"] = True
             products_desc = self.description(ids=ids)
+            final_keys = products_desc.keys()
 
             flags["cultures"] = True
             products_cultures = self.cultures(ids=ids)
@@ -211,22 +212,26 @@ class Read:
         if "description" in categories:
             flags["description"] = True
             products_desc = self.description(ids=ids)
+            final_keys = products_desc.keys()
         
         if "cultures" in categories:
             flags["cultures"] = True
             products_cultures = self.cultures(ids=ids)
+            final_keys = products_cultures.keys()
 
         if "assets" in categories:
             flags["assets"] = True
             products_assets = self.assets(ids=ids)
+            final_keys = products_assets.keys()
         
         if "needs" in categories:
             flags["needs"] = True
             products_needs = self.needs(ids=ids)
+            final_keys = products_needs.keys()
 
         products = []
 
-        for id in products_desc.keys():
+        for id in final_keys:
             
             product = {
                 "id" : id
