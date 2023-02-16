@@ -49,7 +49,11 @@ class Delete_controller:
                 if not id in self.product_ids:
                     flag = False
                     errors += f"product_id '{id}' does not exist in db. " 
-                    
+
+            if body[key] == []:
+                flag = False 
+                errors += f"please consider sending a list of ids as '{key}' value. "
+                  
         return flag, errors
 
     def run(self, body:dict):

@@ -63,7 +63,7 @@ class Update_controller:
     def description_keys_controller(self, product:dict):
         
         # mandatory variables
-        mandatory_keys = [
+        optional_keys = [
             "name", "isin_code", "bloomberg_id", "currency"
         ]
 
@@ -71,14 +71,19 @@ class Update_controller:
         flag = True
         errors = ""
 
-        # flag True means to have necessary input data
-        flag = True
+        if product["description"] == {}:
+            flag = False
+            errors += f"try sending at least one of '{optional_keys}' as description dictionary keys. "
 
-        # check if necessary keys exist
-        for key in mandatory_keys :
-            if not key in product["description"].keys(): 
+        for key in product["description"].keys():
+
+            if not key in optional_keys:
                 flag = False
-                errors += f"try sending '{key}' as a description dictionary key. "
+                errors += f"try sending only '{optional_keys}' as description dictionary keys. "
+
+            elif not type(product["description"][key]) in [str]:
+                flag = False
+                errors += "try sending a value in [0, 1] range as description dictionary values. "
 
         return flag, errors
 
@@ -201,18 +206,18 @@ class Update_controller:
 
         return flag, errors
 
-    def run(self, people:list):
+    def run(self, products:list):
 
         # flag & errors
         flag = True
         errors = ""
 
-        if type(people) != list:
+        if type(products) != list:
             flag = False
             errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
             return flag, errors
         
-        for product in people:
+        for product in products:
             
             if type(product) != dict:
                 flag = False
@@ -257,12 +262,6 @@ class Update_controller:
                     errors +=  f"error seen at id = '{product_id}'. "
                     return flag, errors
 
-                # control description values
-                flag, errors = self.description_values_controller(product=product)
-                if not flag: 
-                    errors += errs
-                    errors +=  f"error seen at id = '{product_id}'. "
-                    return flag, errors
 
             # control cultures if exists
             if flags["cultures"]:
