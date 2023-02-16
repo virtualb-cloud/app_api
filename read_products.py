@@ -98,10 +98,10 @@ class Read:
         
         query = f'''
         SELECT product_id, 
-        equity, balanced,
-        bond, real_estate,
-        commodities, money_market,
-        liquidity
+        equity_index, balanced_index,
+        bond_index, real_estate_index,
+        commodity_index, money_market_index,
+        liquidity_index
 
         FROM {self.schema_name}.prod_assets
         '''
@@ -126,13 +126,13 @@ class Read:
             id = product[0]
 
             new_products[id] = {
-                "equity" : product[1], 
-                "balanced" : product[2],
-                "bond" : product[3], 
-                "real_estate" : product[4],
-                "commodities" : product[5], 
-                "money_market" : product[6],
-                "liquidity" : product[7]
+                "equity_index" : product[1], 
+                "balanced_index" : product[2],
+                "bond_index" : product[3], 
+                "real_estate_index" : product[4],
+                "commodity_index" : product[5], 
+                "money_market_index" : product[6],
+                "liquidity_index" : product[7]
                 }
                 
             

@@ -125,9 +125,9 @@ class Update_controller:
         
         # optional variables
         optional_keys = [
-            "equity", "balanced", "bond",
-            "real_estate", "commodities", "money_market",
-            "liquidity"
+            "equity_index", "balanced_index", "bond_index",
+            "real_estate_index", "commodity_index", "money_market_index",
+            "liquidity_index"
         ]
 
         # flag & errors

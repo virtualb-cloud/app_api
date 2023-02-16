@@ -92,18 +92,18 @@ class Insert:
         # fixed query
         query = f'''
         INSERT INTO {self.schema_name}.prod_assets(
-            product_id, equity, balanced,
-            bond, real_estate,
-            commodities, money_market,
-            liquidity
+            product_id, equity_index, balanced_index,
+            bond_index, real_estate_index,
+            commodity_index, money_market_index,
+            liquidity_index
         )
         VALUES '''
 
         keys_list = [
-            "equity", "balanced",
-            "bond", "real_estate",
-            "commodities", "money_market",
-            "liquidity"
+            "equity_index", "balanced_index",
+            "bond_index", "real_estate_index",
+            "commodity_index", "money_market_index",
+            "liquidity_index"
         ]
 
         for product in products:
@@ -120,10 +120,10 @@ class Insert:
                 if not key in record.keys(): record[key] = "NULL"
 
             # add the data to query  
-            add_statement = f'''('{product_id}', {record["equity"]},
-                {record["balanced"]}, {record["bond"]},
-                {record["real_estate"]}, {record["commodities"]}, 
-                {record["money_market"]}, {record["liquidity"]}
+            add_statement = f'''('{product_id}', {record["equity_index"]},
+                {record["balanced_index"]}, {record["bond_index"]},
+                {record["real_estate_index"]}, {record["commodity_index"]}, 
+                {record["money_market_index"]}, {record["liquidity_index"]}
             ),'''
 
             query = query + add_statement

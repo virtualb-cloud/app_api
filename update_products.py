@@ -87,9 +87,9 @@ class Update:
         record = product["assets"]
 
         keys_list = [
-            "equity", "balanced", "bond",
-            "real_estate", "commodities", "money_market",
-            "liquidity"
+            "equity_index", "balanced_index", "bond_index",
+            "real_estate_index", "commodity_index", "money_market_index",
+            "liquidity_index"
         ]
 
         for key in keys_list:

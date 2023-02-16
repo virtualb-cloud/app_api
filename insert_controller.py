@@ -125,9 +125,9 @@ class Insert_controller:
         
         # optional variables
         optional_keys = [
-            "equity", "balanced", "bond",
-            "real_estate", "commodities", "money_market",
-            "liquidity"
+            "equity_index", "balanced_index", "bond_index",
+            "real_estate_index", "commodity_index", "money_market_index",
+            "liquidity_index"
         ]
 
         # flag & errors
@@ -168,7 +168,7 @@ class Insert_controller:
         # optional variables
         optional_keys = [
             "capital_accumulation_investment_need", "capital_protection_investment_need", 
-            "liquidity_investment_need", "income_investment_need",
+            "liquidity_index_investment_need", "income_investment_need",
             "retirement_investment_need", "heritage_investment_need",
             "health_incurance_need", "home_insurance_need",
             "longterm_care_insurance_need", "payment_financing_need",
