@@ -27,6 +27,8 @@ class Read_controller:
             for item in product_ids:
                 self.product_ids.append(item[0])
 
+        print(self.product_ids)
+
     
     def first_keys_controller(self, body:dict):
         
@@ -43,11 +45,11 @@ class Read_controller:
                 flag = False
                 errors += f"please consider sending '{first_keys}' as body dictionary keys. "
         
-            if type(body[key]) != list:
+            elif type(body[key]) != list:
                 flag = False 
                 errors += f"please consider sending a list for {key}."
             
-            if key == "id":
+            if key == "ids":
                 for id in body[key]:
                     if not id in self.product_ids:
                         flag = False
@@ -57,7 +59,7 @@ class Read_controller:
                 for category in body[key]:
                     if not category in categories:
                         flag = False
-                        errors += f"category '{category}' does not exist in db. " 
+                        errors += f"category '{category}' does not exist, please send {categories}. " 
 
         return flag, errors
     

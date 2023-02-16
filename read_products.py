@@ -30,19 +30,19 @@ class Read:
 
         data = self.engine.connect().execute(statement=query)
 
-        new_people = {}
+        new_products = {}
         for product in data:
 
             id = product[0]
 
-            new_people[id] = {
+            new_products[id] = {
                 "name" : product[1],
                 "isin_code" : product[2],
                 "bloomberg_id" : product[3],
                 "currency" : product[4]
                 }
 
-        return new_people
+        return new_products
 
     def needs(self, ids:list):
         
@@ -72,12 +72,12 @@ class Read:
 
         data = self.engine.connect().execute(statement=query)
 
-        new_people = {}
+        new_products = {}
         for product in data:
             
             id = product[0]
 
-            new_people[id] = {
+            new_products[id] = {
                 'health_insurance_need' : product[1], 
                 'home_insurance_need' : product[2], 
                 'longterm_care_insurance_need' : product[3], 
@@ -92,7 +92,7 @@ class Read:
                 'liquidity_investment_need' : product[12]
             }
             
-        return new_people
+        return new_products
 
     def assets(self, ids:list):
         
@@ -120,12 +120,12 @@ class Read:
 
         data = self.engine.connect().execute(statement=query)
 
-        new_people = {}
+        new_products = {}
         for product in data:
             
             id = product[0]
 
-            new_people[id] = {
+            new_products[id] = {
                 "equity" : product[1], 
                 "balanced" : product[2],
                 "bond" : product[3], 
@@ -136,7 +136,7 @@ class Read:
                 }
                 
             
-        return new_people
+        return new_products
 
     def cultures(self, ids:list):
         
@@ -164,12 +164,12 @@ class Read:
             '''
         data = self.engine.connect().execute(statement=query)
 
-        new_people = {}
+        new_products = {}
         for product in data:
             
             id = product[0]
 
-            new_people[id] = {
+            new_products[id] = {
                 "financial_horizon_index" : product[1], 
                 "financial_litteracy_index" : product[2],
                 "financial_experience_index" : product[3], 
@@ -179,7 +179,7 @@ class Read:
                 "marginality_index" : product[7]
                 }
             
-        return new_people
+        return new_products
 
     def run(self, body:dict):
 
@@ -197,46 +197,46 @@ class Read:
         if categories == []:
             
             flags["description"] = True
-            people_sociodemo = self.description(ids=ids)
+            products_desc = self.description(ids=ids)
 
             flags["cultures"] = True
-            people_cultures = self.cultures(ids=ids)
+            products_cultures = self.cultures(ids=ids)
 
             flags["assets"] = True
-            people_assets = self.assets(ids=ids)
+            products_assets = self.assets(ids=ids)
 
             flags["needs"] = True
-            people_needs = self.needs(ids=ids)
+            products_needs = self.needs(ids=ids)
 
         if "description" in categories:
             flags["description"] = True
-            people_sociodemo = self.description(ids=ids)
+            products_desc = self.description(ids=ids)
         
         if "cultures" in categories:
             flags["cultures"] = True
-            people_cultures = self.cultures(ids=ids)
+            products_cultures = self.cultures(ids=ids)
 
         if "assets" in categories:
             flags["assets"] = True
-            people_assets = self.assets(ids=ids)
+            products_assets = self.assets(ids=ids)
         
         if "needs" in categories:
             flags["needs"] = True
-            people_needs = self.needs(ids=ids)
+            products_needs = self.needs(ids=ids)
 
-        people = []
+        products = []
 
-        for id in people_sociodemo.keys():
+        for id in products_desc.keys():
             
             product = {
                 "id" : id
             } 
 
-            if flags["description"]: product["description"] = people_sociodemo[id]
-            if flags["cultures"]: product["cultures"] = people_cultures[id]
-            if flags["assets"]: product["assets"] = people_assets[id]
-            if flags["needs"]: product["needs"] = people_needs[id]
+            if flags["description"]: product["description"] = products_desc[id]
+            if flags["cultures"]: product["cultures"] = products_cultures[id]
+            if flags["assets"]: product["assets"] = products_assets[id]
+            if flags["needs"]: product["needs"] = products_needs[id]
             
-            people.append(product)
+            products.append(product)
 
-        return people
+        return products
