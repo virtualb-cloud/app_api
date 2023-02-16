@@ -11,23 +11,23 @@ class Read_controller:
         self.schema_name = "mainapp"
         self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
-        # product id
+        # advisor id
 
         query = f'''
-        SELECT product_id
-        FROM {self.schema_name}.hub_product
+        SELECT advisor_id
+        FROM {self.schema_name}.hub_advisor
         '''
     
         response = self.engine.connect().execute(statement=query)
-        product_ids = response.fetchall()
+        advisor_ids = response.fetchall()
 
-        self.product_ids = []
-        if product_ids == None: self.product_ids = []
+        self.advisor_ids = []
+        if advisor_ids == None: self.advisor_ids = []
         else:
-            for item in product_ids:
-                self.product_ids.append(item[0])
+            for item in advisor_ids:
+                self.advisor_ids.append(item[0])
 
-        print(self.product_ids)
+        print(self.advisor_ids)
 
     
     def first_keys_controller(self, body:dict):
@@ -37,7 +37,7 @@ class Read_controller:
         errors = ""
 
         first_keys = ["ids", "categories"]
-        categories = ["description", "needs", "assets", "cultures"]
+        categories = ["description"]
 
         for key in first_keys:
             
@@ -51,9 +51,9 @@ class Read_controller:
             
             if key == "ids":
                 for id in body[key]:
-                    if not id in self.product_ids:
+                    if not id in self.advisor_ids:
                         flag = False
-                        errors += f"product_id '{id}' does not exist in db. " 
+                        errors += f"advisor_id '{id}' does not exist in db. " 
             
             elif key == "categories":
                 for category in body[key]:
