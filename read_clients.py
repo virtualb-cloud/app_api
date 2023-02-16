@@ -241,6 +241,7 @@ class Read:
             
             flags["sociodemographics"] = True
             people_sociodemo = self.socio_demographics(ids=ids)
+            final_keys = people_sociodemo.keys()
 
             flags["cultures"] = True
             people_cultures = self.cultures(ids=ids)
@@ -257,26 +258,31 @@ class Read:
         if "sociodemographics" in categories:
             flags["sociodemographics"] = True
             people_sociodemo = self.socio_demographics(ids=ids)
-        
+            final_keys = people_sociodemo.keys()
+            
         if "cultures" in categories:
             flags["cultures"] = True
             people_cultures = self.cultures(ids=ids)
-
+            final_keys = people_cultures.keys()
+            
         if "status" in categories:
             flags["status"] = True
             people_status = self.status(ids=ids)
+            final_keys = people_status.keys()
         
         if "needs" in categories:
             flags["needs"] = True
             people_needs = self.needs(ids=ids)
+            final_keys = people_needs.keys()
 
         if "attitudes" in categories:
             flags["attitudes"] = True
             people_attitudes = self.attitudes(ids=ids)
+            final_keys = people_attitudes.keys()
 
         people = []
 
-        for id in people_sociodemo.keys():
+        for id in final_keys:
             
             person = {
                 "id" : id
