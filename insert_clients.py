@@ -32,15 +32,23 @@ class Insert:
             record = person["sociodemographics"]
 
             # control keys
+            add_statement = f'''('{person_id}','''
             for key in keys_list:
-                if not key in record.keys(): record[key] = "NULL"
-
-            add_statement = f'''('{person_id}', {record["age"]}, '{record["gender"]}',
-            '{record["location"]}', '{record["education"]}', '{record["profession"]}'),'''
+                
+                if not key in record.keys(): 
+                    record[key] = "NULL"
+                    add_statement += f''' {record[key]},'''
+                
+                else:
+                    if key == "age":
+                        add_statement += f''' {record[key]},'''
+                    else:
+                        add_statement += f''' '{record[key]}','''
+                    
             query = query + add_statement
 
         # to exclude the last ","
-        query = query[:-1] + ";"
+        query = query[:-1] + ");"
 
         # execute the query
         with self.engine.connect() as conn:
