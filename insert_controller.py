@@ -44,22 +44,19 @@ class Insert_controller:
             flag = False
             errors += f"person_id '{person['id']}' exists in db, use update instead. " 
 
-        # controll "sociodemographics"
-        elif not "sociodemographics" in person.keys(): 
-            flag = False
-            errors += "try sending sociodemographics dictionary for each record. " 
-
         return flag, errors
 
     def first_optional_keys_controller(self, person:dict):
 
         flags = {
+            "sociodemographics" : False,
             "status" : False,
             "cultures" : False,
             "attitudes" : False,
             "needs" : False
             } 
 
+        if "sociodemographics" in person.keys(): flags["sociodemographics"] = True
         if "cultures" in person.keys(): flags["cultures"] = True
         if "status" in person.keys(): flags["status"] = True
         if "attitudes" in person.keys(): flags["attitudes"] = True
@@ -70,7 +67,7 @@ class Insert_controller:
     def sociodemographics_keys_controller(self, person:dict):
         
         # mandatory variables
-        mandatory_keys = [
+        optional_keys = [
             "age", "gender", "location", "profession", "education"
         ]
 
@@ -82,10 +79,11 @@ class Insert_controller:
         flag = True
 
         # check if necessary keys exist
-        for key in mandatory_keys :
-            if not key in person["sociodemographics"].keys(): 
+        for key in person["sociodemographics"].keys() :
+
+            if not key in optional_keys:
                 flag = False
-                errors += f"try sending '{key}' as a sociodemographics dictionary key. "
+                errors += f"try sending only '{optional_keys}' as cultures dictionary keys. "
 
         return flag, errors
 
@@ -117,29 +115,35 @@ class Insert_controller:
         errors = ""
 
         # check if necessary variables exist
-        if not type(person["sociodemographics"]["age"]) in [int, float]:
-            flag = False
-            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
+
+        if "age" in person["sociodemographics"].keys():
+            if not type(person["sociodemographics"]["age"]) in [int, float]:
+                flag = False
+                errors += f"try sending sociodemographics 'age' variable in this limits: '{age_limits}'. "
         
-        elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
-            flag = False
-            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
+            elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
+                flag = False
+                errors += f"try sending sociodemographics 'age' variable in this limits: '{age_limits}'. "
         
-        elif not person["sociodemographics"]["gender"] in gender_limits: 
-            flag = False
-            errors += f"try sending sociodemographics gender variable in this limits: '{gender_limits}'. "
+        if "gender" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["gender"] in gender_limits: 
+                flag = False
+                errors += f"try sending sociodemographics 'gender' variable in this limits: '{gender_limits}'. "
 
-        elif not person["sociodemographics"]["location"] in location_limits: 
-            flag = False
-            errors += f"try sending sociodemographics location variable in this limits: '{location_limits}'. "
+        if "location" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["location"] in location_limits: 
+                flag = False
+                errors += f"try sending sociodemographics 'location' variable in this limits: '{location_limits}'. "
 
-        elif not person["sociodemographics"]["profession"] in profession_limits: 
-            flag = False
-            errors += f"try sending sociodemographics profession variable in this limits: '{profession_limits}'. "
+        if "profession" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["profession"] in profession_limits: 
+                flag = False
+                errors += f"try sending sociodemographics 'profession' variable in this limits: '{profession_limits}'. "
 
-        elif not person["sociodemographics"]["education"] in education_limits: 
-            flag = False
-            errors += f"try sending sociodemographics education variable in this limits: '{education_limits}'. "
+        if "education" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["education"] in education_limits: 
+                flag = False
+                errors += f"try sending sociodemographics 'education' variable in this limits: '{education_limits}'. "
 
         return flag, errors
 
@@ -295,22 +299,23 @@ class Insert_controller:
             else:
                 person_id = person["id"]
 
-            # control sociodemographics keys and values
-            flag, errors = self.sociodemographics_keys_controller(person=person)
-            if not flag: 
-                errors += errs 
-                errors +=f"error seen at id = '{person_id}'. "
-                return flag, errors
-
-            flag, errors = self.sociodemographics_values_controller(person=person)
-            if not flag: 
-                errors += errs
-                errors += f"error seen at id = '{person_id}'. "
-                return flag, errors
-            
             # optional keys
             flags = self.first_optional_keys_controller(person=person)
             
+            # control sociodemographics keys and values
+            if flags["sociodemographics"]:
+                flag, errors = self.sociodemographics_keys_controller(person=person)
+                if not flag: 
+                    errors += errs 
+                    errors +=f"error seen at id = '{person_id}'. "
+                    return flag, errors
+
+                flag, errors = self.sociodemographics_values_controller(person=person)
+                if not flag: 
+                    errors += errs
+                    errors += f"error seen at id = '{person_id}'. "
+                    return flag, errors
+
             # control cultures if exists
             if flags["cultures"]:
                 flag, errors = self.cultures_controller(person=person)

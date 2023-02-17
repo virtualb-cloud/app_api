@@ -18,12 +18,22 @@ class Insert:
             )
             VALUES '''
         
+        keys_list = [
+            "age", "gender", "location", "profession", "education"
+        ]
         # add the data to query
         for person in people:
 
             person_id = person["id"]
+
+            # check
+            if not "sociodemographics" in person.keys(): person["sociodemographics"] = {}
             
             record = person["sociodemographics"]
+
+            # control keys
+            for key in keys_list:
+                if not key in record.keys(): record[key] = "NULL"
 
             add_statement = f'''('{person_id}', {record["age"]}, '{record["gender"]}',
             '{record["location"]}', '{record["education"]}', '{record["profession"]}'),'''

@@ -65,7 +65,7 @@ class Update_controller:
     def sociodemographics_keys_controller(self, person:dict):
         
         # mandatory variables
-        mandatory_keys = [
+        optional_keys = [
             "age", "gender", "location", "profession", "education"
         ]
 
@@ -77,10 +77,10 @@ class Update_controller:
         flag = True
 
         # check if necessary keys exist
-        for key in mandatory_keys :
-            if not key in person["sociodemographics"].keys(): 
+        for key in person["sociodemographics"].keys() :
+            if not key in optional_keys: 
                 flag = False
-                errors += f"try sending '{key}' as a sociodemographics dictionary key. "
+                errors += f"try sending only '{optional_keys}' as a sociodemographics dictionary key. "
 
         return flag, errors
 
@@ -112,29 +112,32 @@ class Update_controller:
         errors = ""
 
         # check if necessary variables exist
-        if not type(person["sociodemographics"]["age"]) in [int, float]:
-            flag = False
-            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
+        if "age" in person["sociodemographics"].keys():
+            if not type(person["sociodemographics"]["age"]) in [int, float]:
+                flag = False
+                errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
+            
+            elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
+                flag = False
+                errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
         
-        elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
-            flag = False
-            errors += f"try sending sociodemographics age variable in this limits: '{age_limits}'. "
-        
-        elif not person["sociodemographics"]["gender"] in gender_limits: 
-            flag = False
-            errors += f"try sending sociodemographics gender variable in this limits: '{gender_limits}'. "
+        if "gender" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["gender"] in gender_limits: 
+                flag = False
+                errors += f"try sending sociodemographics gender variable in this limits: '{gender_limits}'. "
+        if "location" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["location"] in location_limits: 
+                flag = False
+                errors += f"try sending sociodemographics location variable in this limits: '{location_limits}'. "
+        if "profession" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["profession"] in profession_limits: 
+                flag = False
+                errors += f"try sending sociodemographics profession variable in this limits: '{profession_limits}'. "
 
-        elif not person["sociodemographics"]["location"] in location_limits: 
-            flag = False
-            errors += f"try sending sociodemographics location variable in this limits: '{location_limits}'. "
-
-        elif not person["sociodemographics"]["profession"] in profession_limits: 
-            flag = False
-            errors += f"try sending sociodemographics profession variable in this limits: '{profession_limits}'. "
-
-        elif not person["sociodemographics"]["education"] in education_limits: 
-            flag = False
-            errors += f"try sending sociodemographics education variable in this limits: '{education_limits}'. "
+        if "education" in person["sociodemographics"].keys():
+            if not person["sociodemographics"]["education"] in education_limits: 
+                flag = False
+                errors += f"try sending sociodemographics education variable in this limits: '{education_limits}'. "
 
         return flag, errors
 
