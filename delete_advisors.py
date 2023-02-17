@@ -15,15 +15,15 @@ class Delete:
         if len(ids) == 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.hub_product
-            WHERE product_id = '{ids[0]}'
+            DELETE FROM {self.schema_name}.hub_advisor
+            WHERE advisor_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.hub_product
-            WHERE product_id in {tuple(ids)}
+            DELETE FROM {self.schema_name}.hub_advisor
+            WHERE advisor_id in {tuple(ids)}
             '''
 
         self.engine.connect().execute(statement=query)
