@@ -77,7 +77,7 @@ class Update_controller:
 
             elif not type(product["description"][key]) in [str]:
                 flag = False
-                errors += "try sending a value in [0, 1] range as description dictionary values. "
+                errors += "try sending a string as description dictionary values. "
 
         return flag, errors
 

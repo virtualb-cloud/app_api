@@ -44,11 +44,6 @@ class Insert_controller:
             flag = False
             errors += f"advisor_id '{advisor['id']}' exists in db, use update instead. " 
 
-        # controll "description"
-        elif not "description" in advisor.keys(): 
-            flag = False
-            errors += "try sending description dictionary for each record. " 
-
         return flag, errors
     
     def first_optional_keys_controller(self, advisor:dict):
@@ -71,10 +66,6 @@ class Insert_controller:
         # flag & errors
         flag = True
         errors = ""
-
-        if advisor["description"] == {}:
-            flag = False
-            errors += f"try sending at least one of '{optional_keys}' as description dictionary keys. "
 
         for key in advisor["description"].keys():
 
@@ -125,25 +116,15 @@ class Insert_controller:
             else:
                 advisor_id = advisor["id"]
 
-                        # optional keys
+            # optional keys
             flags = self.first_optional_keys_controller(advisor=advisor)
             
-            sign = 0
-            for k, v in flags.items():
-                if v == True: sign = 1
-            
-            if sign == 0:
-                flag = False
-                errors = f"try sending at least one of '{all_keys[1:]}'. "
-                errors +=  f"error seen at id = '{advisor_id}'. "
-                return flag, errors
-
-            # optional keys
-            flag, errors = self.description_keys_controller(advisor=advisor)
-            if not flag: 
-                errors += errs 
-                errors +=f"error seen at id = '{advisor_id}'. "
-                return flag, errors
+            if flags["description"]:
+                flag, errors = self.description_keys_controller(advisor=advisor)
+                if not flag: 
+                    errors += errs 
+                    errors +=f"error seen at id = '{advisor_id}'. "
+                    return flag, errors
 
 
         return flag, errors

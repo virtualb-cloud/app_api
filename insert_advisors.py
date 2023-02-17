@@ -24,6 +24,7 @@ class Insert:
 
             advisor_id = advisor["id"]
             
+            if advisor["description"] == {} 
             record = advisor["description"]
 
             add_statement = f'''('{advisor_id}', '{record["classification_index"]}',
