@@ -32,15 +32,19 @@ class Insert:
             record = product["description"]
 
             # control keys
+            add_statement = f'''('{product_id}','''
+            
             for key in keys_list:
-                if not key in record.keys(): record[key] = "NULL"
-
-            add_statement = f'''('{product_id}', '{record["name"]}', '{record["isin_code"]}',
-            '{record["bloomberg_id"]}', '{record["currency"]}'),'''
-            query = query + add_statement
-
+                
+                if not key in record.keys(): 
+                    record[key] = "NULL"
+                    add_statement += f''' {record[key]},'''
+                
+                else:
+                    add_statement += f''' '{record[key]}','''
+            
         # to exclude the last ","
-        query = query[:-1] + ";"
+        query = query[:-1] + ");"
 
         # execute the query
         with self.engine.connect() as conn:
