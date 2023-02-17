@@ -26,6 +26,9 @@ class Insert:
 
             product_id = product["id"]
             
+            # check
+            if not "description" in product.keys(): product["description"] = {}
+
             record = product["description"]
 
             # control keys

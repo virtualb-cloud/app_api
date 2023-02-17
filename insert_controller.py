@@ -49,11 +49,13 @@ class Insert_controller:
     def first_optional_keys_controller(self, product:dict):
 
         flags = {
+            "description" : False,
             "assets" : False,
             "cultures" : False,
             "needs" : False
             } 
 
+        if "description" in product.keys(): flags["description"] = True
         if "cultures" in product.keys(): flags["cultures"] = True
         if "assets" in product.keys(): flags["assets"] = True
         if "needs" in product.keys(): flags["needs"] = True
@@ -79,7 +81,7 @@ class Insert_controller:
 
             if not key in optional_keys:
                 flag = False
-                errors += f"try sending '{optional_keys}' as description dictionary keys. "
+                errors += f"try sending only '{optional_keys}' as description dictionary keys. "
 
         return flag, errors
 
@@ -230,24 +232,26 @@ class Insert_controller:
                     flag = False
                     errors += f"try sending only '{all_keys}' as record dictionary keys. "
                     return flag, errors
-                
-            # necessary keys
-            flag, errs = self.first_necessary_keys_controller(product=product)
-            if not flag: 
-                errors += errs
-                return flag, errors
-            else:
-                product_id = product["id"]
-
-            # control description keys and values
-            flag, errors = self.description_keys_controller(product=product)
-            if not flag: 
-                errors += errs 
-                errors +=f"error seen at id = '{product_id}'. "
-                return flag, errors
 
             # optional keys
             flags = self.first_optional_keys_controller(product=product)
+            
+            # control description if exists
+            if flags["description"]:
+                flag, errs = self.first_necessary_keys_controller(product=product)
+                if not flag: 
+                    errors += errs
+                    return flag, errors
+                else:
+                    product_id = product["id"]
+
+                # control description keys and values
+                flag, errors = self.description_keys_controller(product=product)
+                if not flag: 
+                    errors += errs 
+                    errors +=f"error seen at id = '{product_id}'. "
+                    return flag, errors
+
             
             # control cultures if exists
             if flags["cultures"]:
