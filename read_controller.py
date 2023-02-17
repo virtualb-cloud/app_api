@@ -11,21 +11,21 @@ class Read_controller:
         self.schema_name = "mainapp"
         self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
-        # person id
+        # customer id
 
         query = f'''
-        SELECT person_id
+        SELECT customer_id
         FROM {self.schema_name}.hub_customer
         '''
     
         response = self.engine.connect().execute(statement=query)
-        person_ids = response.fetchall()
+        customer_ids = response.fetchall()
 
-        self.person_ids = []
-        if person_ids == None: self.person_ids = []
+        self.customer_ids = []
+        if customer_ids == None: self.customer_ids = []
         else:
-            for item in person_ids:
-                self.person_ids.append(item[0])
+            for item in customer_ids:
+                self.customer_ids.append(item[0])
 
     
     def first_keys_controller(self, body:dict):
@@ -49,9 +49,9 @@ class Read_controller:
             
             if key == "id":
                 for id in body[key]:
-                    if not id in self.person_ids:
+                    if not id in self.customer_ids:
                         flag = False
-                        errors += f"person_id '{id}' does not exist in db. " 
+                        errors += f"customer_id '{id}' does not exist in db. " 
             
             elif key == "categories":
                 for category in body[key]:

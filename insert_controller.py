@@ -11,24 +11,24 @@ class Insert_controller:
         self.schema_name = "mainapp"
         self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
-        # person id
+        # customer id
 
         query = f'''
-        SELECT person_id
+        SELECT customer_id
         FROM {self.schema_name}.hub_customer
         '''
     
         response = self.engine.connect().execute(query)
-        person_ids = response.fetchall()
+        customer_ids = response.fetchall()
 
-        self.person_ids = []
-        if person_ids == None: self.person_ids = []
+        self.customer_ids = []
+        if customer_ids == None: self.customer_ids = []
         else:
-            for item in person_ids:
-                self.person_ids.append(item[0])
+            for item in customer_ids:
+                self.customer_ids.append(item[0])
 
     
-    def first_necessary_keys_controller(self, person:dict):
+    def first_necessary_keys_controller(self, customer:dict):
 
         # flag & errors
         flag = True
@@ -36,17 +36,17 @@ class Insert_controller:
 
         # controll "id"
 
-        if not "id" in person.keys(): 
+        if not "id" in customer.keys(): 
             errors += "try sending an id for each record. " 
             flag = False
         
-        elif person["id"] in self.person_ids:
+        elif customer["id"] in self.customer_ids:
             flag = False
-            errors += f"person_id '{person['id']}' exists in db, use update instead. " 
+            errors += f"customer_id '{customer['id']}' exists in db, use update instead. " 
 
         return flag, errors
 
-    def first_optional_keys_controller(self, person:dict):
+    def first_optional_keys_controller(self, customer:dict):
 
         flags = {
             "sociodemographics" : False,
@@ -56,15 +56,15 @@ class Insert_controller:
             "needs" : False
             } 
 
-        if "sociodemographics" in person.keys(): flags["sociodemographics"] = True
-        if "cultures" in person.keys(): flags["cultures"] = True
-        if "status" in person.keys(): flags["status"] = True
-        if "attitudes" in person.keys(): flags["attitudes"] = True
-        if "needs" in person.keys(): flags["needs"] = True
+        if "sociodemographics" in customer.keys(): flags["sociodemographics"] = True
+        if "cultures" in customer.keys(): flags["cultures"] = True
+        if "status" in customer.keys(): flags["status"] = True
+        if "attitudes" in customer.keys(): flags["attitudes"] = True
+        if "needs" in customer.keys(): flags["needs"] = True
 
         return flags
         
-    def sociodemographics_keys_controller(self, person:dict):
+    def sociodemographics_keys_controller(self, customer:dict):
         
         # mandatory variables
         optional_keys = [
@@ -79,7 +79,7 @@ class Insert_controller:
         flag = True
 
         # check if necessary keys exist
-        for key in person["sociodemographics"].keys() :
+        for key in customer["sociodemographics"].keys() :
 
             if not key in optional_keys:
                 flag = False
@@ -87,7 +87,7 @@ class Insert_controller:
 
         return flag, errors
 
-    def sociodemographics_values_controller(self, person:dict):
+    def sociodemographics_values_controller(self, customer:dict):
         
         # functional limits to each variable
         age_limits = [0, 120]
@@ -116,38 +116,38 @@ class Insert_controller:
 
         # check if necessary variables exist
 
-        if "age" in person["sociodemographics"].keys():
-            if not type(person["sociodemographics"]["age"]) in [int, float]:
+        if "age" in customer["sociodemographics"].keys():
+            if not type(customer["sociodemographics"]["age"]) in [int, float]:
                 flag = False
                 errors += f"try sending sociodemographics 'age' variable in this limits: '{age_limits}'. "
         
-            elif (person["sociodemographics"]["age"] > 120) | (person["sociodemographics"]["age"] < 0): 
+            elif (customer["sociodemographics"]["age"] > 120) | (customer["sociodemographics"]["age"] < 0): 
                 flag = False
                 errors += f"try sending sociodemographics 'age' variable in this limits: '{age_limits}'. "
         
-        if "gender" in person["sociodemographics"].keys():
-            if not person["sociodemographics"]["gender"] in gender_limits: 
+        if "gender" in customer["sociodemographics"].keys():
+            if not customer["sociodemographics"]["gender"] in gender_limits: 
                 flag = False
                 errors += f"try sending sociodemographics 'gender' variable in this limits: '{gender_limits}'. "
 
-        if "location" in person["sociodemographics"].keys():
-            if not person["sociodemographics"]["location"] in location_limits: 
+        if "location" in customer["sociodemographics"].keys():
+            if not customer["sociodemographics"]["location"] in location_limits: 
                 flag = False
                 errors += f"try sending sociodemographics 'location' variable in this limits: '{location_limits}'. "
 
-        if "profession" in person["sociodemographics"].keys():
-            if not person["sociodemographics"]["profession"] in profession_limits: 
+        if "profession" in customer["sociodemographics"].keys():
+            if not customer["sociodemographics"]["profession"] in profession_limits: 
                 flag = False
                 errors += f"try sending sociodemographics 'profession' variable in this limits: '{profession_limits}'. "
 
-        if "education" in person["sociodemographics"].keys():
-            if not person["sociodemographics"]["education"] in education_limits: 
+        if "education" in customer["sociodemographics"].keys():
+            if not customer["sociodemographics"]["education"] in education_limits: 
                 flag = False
                 errors += f"try sending sociodemographics 'education' variable in this limits: '{education_limits}'. "
 
         return flag, errors
 
-    def cultures_controller(self, person:dict):
+    def cultures_controller(self, customer:dict):
         
         # optional variables
         optional_keys = [
@@ -161,23 +161,23 @@ class Insert_controller:
         flag = True
         errors = ""
 
-        if person["cultures"] == {}:
+        if customer["cultures"] == {}:
             flag = False
             errors += f"try sending at least one of '{optional_keys}' as cultures dictionary keys. "
 
-        for key in person["cultures"].keys():
+        for key in customer["cultures"].keys():
 
             if not key in optional_keys:
                 flag = False
                 errors += f"try sending '{optional_keys}' as cultures dictionary keys. "
 
-            elif (person["cultures"][key] < 0) | (person["cultures"][key] > 1): 
+            elif (customer["cultures"][key] < 0) | (customer["cultures"][key] > 1): 
                 flag = False
                 errors += f"try sending a value in [0, 1] range as cultures dictionary values. "
 
         return flag, errors
 
-    def status_controller(self, person:dict):
+    def status_controller(self, customer:dict):
         
         # optional variables
         optional_keys = [
@@ -190,23 +190,23 @@ class Insert_controller:
         flag = True
         errors = ""
 
-        if person["status"] == {}:
+        if customer["status"] == {}:
             flag = False
             errors += f"try sending at least one of '{optional_keys}' as status dictionary keys. "
 
-        for key in person["status"].keys():
+        for key in customer["status"].keys():
 
             if not key in optional_keys:
                 flag = False
                 errors += f"try sending '{optional_keys}' as status dictionary keys. "
 
-            elif (person["status"][key] < 0) | (person["status"][key] > 1): 
+            elif (customer["status"][key] < 0) | (customer["status"][key] > 1): 
                 flag = False
                 errors += f"try sending a value in [0, 1] range as status dictionary values. "
 
         return flag, errors
             
-    def attitudes_controller(self, person:dict):
+    def attitudes_controller(self, customer:dict):
         
         # optional variables
         optional_keys = [
@@ -218,23 +218,23 @@ class Insert_controller:
         flag = True
         errors = ""
 
-        if person["attitudes"] == {}:
+        if customer["attitudes"] == {}:
             flag = False
             errors += f"try sending at least one of '{optional_keys}' as attitudes dictionary keys. "
 
-        for key in person["attitudes"].keys():
+        for key in customer["attitudes"].keys():
 
             if not key in optional_keys:
                 flag = False
                 errors += f"try sending '{optional_keys}' as attitudes dictionary keys. "
 
-            elif (person["attitudes"][key] < 0) | (person["attitudes"][key] > 1): 
+            elif (customer["attitudes"][key] < 0) | (customer["attitudes"][key] > 1): 
                 flag = False
                 errors += f"try sending a value in [0, 1] range as attitudes dictionary values. "
 
         return flag, errors
 
-    def needs_controller(self, person:dict):
+    def needs_controller(self, customer:dict):
         
         # optional variables
         optional_keys = [
@@ -250,102 +250,102 @@ class Insert_controller:
         flag = True
         errors = ""
 
-        if person["needs"] == {}:
+        if customer["needs"] == {}:
             flag = False
             errors += f"try sending at least one of '{optional_keys}' as needs dictionary keys. "
 
-        for key in person["needs"].keys():
+        for key in customer["needs"].keys():
 
             if not key in optional_keys:
                 flag = False
                 errors += f"try sending '{optional_keys}' as needs dictionary keys. "
 
-            elif (person["needs"][key] < 0) | (person["needs"][key] > 1): 
+            elif (customer["needs"][key] < 0) | (customer["needs"][key] > 1): 
                 flag = False
                 errors += f"try sending a value in [0, 1] range as needs dictionary values. "
 
         return flag, errors
 
-    def run(self, people:list):
+    def run(self, customers:list):
 
         # flag & errors
         flag = True
         errors = ""
 
-        if type(people) != list:
+        if type(customers) != list:
             flag = False
             errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
             return flag, errors
         
-        for person in people:
+        for customer in customers:
             
-            if type(person) != dict:
+            if type(customer) != dict:
                 flag = False
                 errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
                 return flag, errors
             
             all_keys = ["id", "sociodemographics", "attitudes", "cultures", "status", "needs"]
-            for key in person.keys():
+            for key in customer.keys():
                 if not key in all_keys:
                     flag = False
                     errors += f"try sending only '{all_keys}' as record dictionary keys. "
                     return flag, errors
                 
             # necessary keys
-            flag, errs = self.first_necessary_keys_controller(person=person)
+            flag, errs = self.first_necessary_keys_controller(customer=customer)
             if not flag: 
                 errors += errs
                 return flag, errors
             else:
-                person_id = person["id"]
+                customer_id = customer["id"]
 
             # optional keys
-            flags = self.first_optional_keys_controller(person=person)
+            flags = self.first_optional_keys_controller(customer=customer)
             
             # control sociodemographics keys and values
             if flags["sociodemographics"]:
-                flag, errors = self.sociodemographics_keys_controller(person=person)
+                flag, errors = self.sociodemographics_keys_controller(customer=customer)
                 if not flag: 
                     errors += errs 
-                    errors +=f"error seen at id = '{person_id}'. "
+                    errors +=f"error seen at id = '{customer_id}'. "
                     return flag, errors
 
-                flag, errors = self.sociodemographics_values_controller(person=person)
+                flag, errors = self.sociodemographics_values_controller(customer=customer)
                 if not flag: 
                     errors += errs
-                    errors += f"error seen at id = '{person_id}'. "
+                    errors += f"error seen at id = '{customer_id}'. "
                     return flag, errors
 
             # control cultures if exists
             if flags["cultures"]:
-                flag, errors = self.cultures_controller(person=person)
+                flag, errors = self.cultures_controller(customer=customer)
                 if not flag: 
                     errors += errs
-                    errors += f"error seen at id = '{person_id}'. "
+                    errors += f"error seen at id = '{customer_id}'. "
                     return flag, errors
 
             # control status if exists
             if flags["status"]:
-                flag, errors = self.status_controller(person=person)
+                flag, errors = self.status_controller(customer=customer)
                 if not flag: 
                     errors += errs
-                    errors += f"error seen at id = '{person_id}'. "
+                    errors += f"error seen at id = '{customer_id}'. "
                     return flag, errors
             
             # control attitudes if exists
             if flags["attitudes"]:
-                flag, errors = self.attitudes_controller(person=person)
+                flag, errors = self.attitudes_controller(customer=customer)
                 if not flag: 
                     errors += errs
-                    errors += f"error seen at id = '{person_id}'. "
+                    errors += f"error seen at id = '{customer_id}'. "
                     return flag, errors
 
             # control needs if exists
             if flags["needs"]:
-                flag, errors = self.needs_controller(person=person)
+                flag, errors = self.needs_controller(customer=customer)
                 if not flag: 
                     errors += errs
-                    errors += f"error seen at id = '{person_id}'. "
+                    errors += f"error seen at id = '{customer_id}'. "
                     return flag, errors
 
         return flag, errors

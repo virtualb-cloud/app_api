@@ -16,14 +16,14 @@ class Delete:
 
             query = f'''
             DELETE FROM {self.schema_name}.hub_customer
-            WHERE person_id = '{ids[0]}'
+            WHERE customer_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
 
             query = f'''
             DELETE FROM {self.schema_name}.hub_customer
-            WHERE person_id in {tuple(ids)}
+            WHERE customer_id in {tuple(ids)}
             '''
 
         self.engine.connect().execute(statement=query)

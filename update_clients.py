@@ -9,7 +9,7 @@ class Update:
         self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
 
-    def update_person_sociodemographics(self, person:dict):
+    def update_customer_sociodemographics(self, customer:dict):
         
         # fixed query
         fixed_query = f'''
@@ -18,7 +18,7 @@ class Update:
         '''
         set_query = ""
 
-        record = person["sociodemographics"]
+        record = customer["sociodemographics"]
 
         # control keys
         keys_list = [
@@ -35,14 +35,14 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
+        query = fixed_query + set_query + f" WHERE customer_id = '{record['customer_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def update_person_cultures(self, person:dict):
+    def update_customer_cultures(self, customer:dict):
 
         # fixed query
         fixed_query = f'''
@@ -51,7 +51,7 @@ class Update:
         '''
         set_query = ""
 
-        record = person["cultures"]
+        record = customer["cultures"]
 
         # control keys
         keys_list = [
@@ -68,14 +68,14 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
+        query = fixed_query + set_query + f" WHERE customer_id = '{record['customer_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def update_person_status(self, person:dict):
+    def update_customer_status(self, customer:dict):
 
         # fixed query
         fixed_query = f'''
@@ -84,7 +84,7 @@ class Update:
         '''
         set_query = ""
 
-        record = person["status"]
+        record = customer["status"]
 
         keys_list = [
             "real_assets_index", "financial_assets_index",
@@ -100,14 +100,14 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
+        query = fixed_query + set_query + f" WHERE customer_id = '{record['customer_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def update_person_attitudes(self, person:dict):
+    def update_customer_attitudes(self, customer:dict):
         
         # fixed query
         fixed_query = f'''
@@ -116,7 +116,7 @@ class Update:
         '''
         set_query = ""
 
-        record = person["attitudes"]
+        record = customer["attitudes"]
 
         keys_list = [
             "bank_activity_index", "digital_activity_index",
@@ -131,14 +131,14 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
+        query = fixed_query + set_query + f" WHERE customer_id = '{record['customer_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def update_person_needs(self, person:dict):
+    def update_customer_needs(self, customer:dict):
         
         # fixed query
         fixed_query = f'''
@@ -147,7 +147,7 @@ class Update:
         '''
         set_query = ""
 
-        record = person["needs"]
+        record = customer["needs"]
 
         keys_list = [
             'health_insurance_need', 'home_insurance_need', 'longterm_care_insurance_need', 
@@ -164,42 +164,42 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE person_id = '{record['person_id']}'" 
+        query = fixed_query + set_query + f" WHERE customer_id = '{record['customer_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def run(self, people:list):
+    def run(self, customers:list):
 
-        for person in people:
+        for customer in customers:
             
-            person_id = person["id"]
+            customer_id = customer["id"]
 
-            if "sociodemographics" in person.keys(): 
-                person["sociodemographics"]["person_id"] = person_id
-                self.update_person_sociodemographics(person=person)
+            if "sociodemographics" in customer.keys(): 
+                customer["sociodemographics"]["customer_id"] = customer_id
+                self.update_customer_sociodemographics(customer=customer)
                 print("sociodemographics pushed")
 
-            if "cultures" in person.keys(): 
-                person["cultures"]["person_id"] = person_id
-                self.update_person_cultures(person=person)
+            if "cultures" in customer.keys(): 
+                customer["cultures"]["customer_id"] = customer_id
+                self.update_customer_cultures(customer=customer)
                 print("cultures pushed")
                 
-            if "status" in person.keys(): 
-                person["status"]["person_id"] = person_id
-                self.update_person_status(person=person)
+            if "status" in customer.keys(): 
+                customer["status"]["customer_id"] = customer_id
+                self.update_customer_status(customer=customer)
                 print("status pushed")
 
-            if "attitudes" in person.keys(): 
-                person["attitudes"]["person_id"] = person_id
-                self.update_person_attitudes(person=person)
+            if "attitudes" in customer.keys(): 
+                customer["attitudes"]["customer_id"] = customer_id
+                self.update_customer_attitudes(customer=customer)
                 print("attitudes pushed")
 
-            if "needs" in person.keys(): 
-                person["needs"]["person_id"] = person_id
-                self.update_person_needs(person=person)
+            if "needs" in customer.keys(): 
+                customer["needs"]["customer_id"] = customer_id
+                self.update_customer_needs(customer=customer)
                 print("needs pushed")
                 
         return True
