@@ -43,9 +43,11 @@ class Insert:
                 else:
                     add_statement += f''' '{record[key]}','''
             
-        # to exclude the last ","
-        query = query[:-1] + ");"
+            # to exclude the last ","
+            query = query + add_statement[:-1] + "),"
 
+        query = query[:-1] + ";"
+        
         # execute the query
         with self.engine.connect() as conn:
             conn.execute(statement=query)
