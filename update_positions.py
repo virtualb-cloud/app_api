@@ -9,20 +9,20 @@ class Update:
         self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
         
 
-    def update_portfolio_description(self, portfolio:dict):
+    def update_position_description(self, position:dict):
         
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.link_portfolio
+        UPDATE {self.schema_name}.link_position
         SET 
         '''
         set_query = ""
 
-        record = portfolio["description"]
+        record = position["description"]
 
         # control keys
         keys_list = [
-            "advisor_id"
+            "portfolio_id", "product_id"
         ]
 
         for key in keys_list:
@@ -32,22 +32,22 @@ class Update:
 
         # to exclude the last ","
         set_query = set_query[:-1]
-        query = fixed_query + set_query + f" WHERE portfolio_id = '{record['portfolio_id']}'" 
+        query = fixed_query + set_query + f" WHERE position_id = '{record['position_id']}'" 
 
         # execute the query
         self.engine.connect().execute(statement=query)
 
         return True
 
-    def run(self, portfolios:list):
+    def run(self, positions:list):
 
-        for portfolio in portfolios:
+        for position in positions:
             
-            portfolio_id = portfolio["id"]
+            position_id = position["id"]
 
-            if "description" in portfolio.keys(): 
-                portfolio["description"]["portfolio_id"] = portfolio_id
-                self.update_portfolio_description(portfolio=portfolio)
+            if "description" in position.keys(): 
+                position["description"]["position_id"] = position_id
+                self.update_position_description(position=position)
                 print("description pushed")
                 
         return True
