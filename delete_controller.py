@@ -1,0 +1,75 @@
+from sqlalchemy import create_engine
+
+class Delete_controller:
+
+    def __init__(self) -> None:
+
+        # object to control the sample
+        # before adding to enrichment db
+
+        # db connection
+        self.schema_name = "mainapp"
+        self.engine = create_engine("postgresql://postgres:!vbPostgres@virtualb-rds-mainapp.clg6weaheijj.eu-south-1.rds.amazonaws.com:5432/postgres")
+        
+        # transaction id
+
+        query = f'''
+        SELECT transaction_id
+        FROM {self.schema_name}.sat_transaction
+        '''
+    
+        response = self.engine.connect().execute(statement=query)
+        transaction_ids = response.fetchall()
+
+        self.transaction_ids = []
+        if transaction_ids == None: self.transaction_ids = []
+        else:
+            for item in transaction_ids:
+                self.transaction_ids.append(item[0])
+
+    
+    def first_keys_controller(self, body:dict):
+        
+        # flag & errors
+        flag = True
+        errors = ""
+
+        first_keys = ["ids"]
+
+        for key in first_keys:
+            if not key in body.keys(): 
+                flag = False
+                errors += f"please consider sending '{first_keys}' as body dictionary keys. "
+        
+            if type(body[key]) != list:
+                flag = False 
+                errors += f"please consider sending a list of ids as '{key}' value. "
+            
+            for id in body[key]:
+                if not id in self.transaction_ids:
+                    flag = False
+                    errors += f"transaction_id '{id}' does not exist in db. " 
+
+            if body[key] == []:
+                flag = False 
+                errors += f"please consider sending a list of ids as '{key}' value. "
+                  
+        return flag, errors
+
+    def run(self, body:dict):
+
+        # flag & errors
+        flag = True
+        errors = ""
+
+        if type(body) != dict:
+            flag = False 
+            errors += "please consider sending a body like: {'ids' : []}. "
+            return flag, errors
+
+        flag, errs = self.first_keys_controller(body)
+        if not flag:
+            errors += errs
+            return flag, errors
+
+        return flag, errors
