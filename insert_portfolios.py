@@ -14,24 +14,23 @@ class Insert:
         # prepare fixed query
         query = f'''
             INSERT INTO {self.schema_name}.hub_portfolio(
-                portfolio_id, client_id, advisor_id
+                portfolio_id, customer_id, advisor_id
             )
             VALUES '''
         
         keys_list = [
-            "client_id", "advisor_id"
+            "customer_id", "advisor_id"
         ]
         # add the data to query
         for portfolio in portfolios:
             
             portfolio_id = portfolio["id"]
 
-            record = portfolio["description"]
-
             add_statement = f'''('{portfolio_id}','''
+
             # control keys
             for key in keys_list:
-                add_statement += f''' '{record[key]}','''
+                add_statement += f''' '{portfolio[key]}','''
 
             # to exclude the last ","
             query = query + add_statement[:-1] + "),"

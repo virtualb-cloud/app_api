@@ -27,21 +27,21 @@ class Insert_controller:
             for item in portfolio_ids:
                 self.portfolio_ids.append(item[0])
 
-        # client id
+        # customer id
 
         query = f'''
-        SELECT client_id
+        SELECT customer_id
         FROM {self.schema_name}.hub_customer
         '''
     
         response = self.engine.connect().execute(query)
-        client_ids = response.fetchall()
+        customer_ids = response.fetchall()
 
-        self.client_ids = []
-        if client_ids == None: self.client_ids = []
+        self.customer_ids = []
+        if customer_ids == None: self.customer_ids = []
         else:
-            for item in client_ids:
-                self.client_ids.append(item[0])
+            for item in customer_ids:
+                self.customer_ids.append(item[0])
 
         # advisor id
 
@@ -58,8 +58,7 @@ class Insert_controller:
         else:
             for item in advisor_ids:
                 self.advisor_ids.append(item[0])
-
-    
+   
     def first_necessary_keys_controller(self, portfolio:dict):
 
         # flag & errors
@@ -67,7 +66,7 @@ class Insert_controller:
         errors = ""
 
         mandatory_keys = [
-            "id", "client_id", "advisor_id"
+            "id", "customer_id", "advisor_id"
         ]
         # controll 
         for key in mandatory_keys:
@@ -80,9 +79,9 @@ class Insert_controller:
             flag = False
             errors += f"portfolio_id '{portfolio['id']}' exists in db, use update instead. " 
 
-        elif not portfolio["client_id"] in self.client_ids:
+        elif not portfolio["customer_id"] in self.customer_ids:
             flag = False
-            errors += f"client_id '{portfolio['client_id']}' does not exist in db. " 
+            errors += f"customer_id '{portfolio['customer_id']}' does not exist in db. " 
 
         elif not portfolio["advisor_id"] in self.advisor_ids:
             flag = False
@@ -108,7 +107,7 @@ class Insert_controller:
                 errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
                 return flag, errors
             
-            all_keys = ["id", "client_id", "advisor_id"]
+            all_keys = ["id", "customer_id", "advisor_id"]
             for key in portfolio.keys():
                 if not key in all_keys:
                     flag = False

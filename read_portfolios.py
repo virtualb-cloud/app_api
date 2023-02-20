@@ -11,7 +11,7 @@ class Read:
     def description(self, ids:list):
 
         query = f'''
-        SELECT portfolio_id, classification_index, qualification_index, diversification_index
+        SELECT portfolio_id, advisor_id, customer_id
 
         FROM {self.schema_name}.hub_portfolio
         '''
@@ -36,9 +36,8 @@ class Read:
             id = portfolio[0]
 
             new_portfolios[id] = {
-                "classification_index" : portfolio[1],
-                "qualification_index" : portfolio[2],
-                "diversification_index" : portfolio[3]
+                "advisor_id" : portfolio[1],
+                "customer_id" : portfolio[2]
                 }
 
         return new_portfolios
@@ -50,12 +49,14 @@ class Read:
         categories = body["categories"]
 
         flags = {
-            "description" : False
+            "advisor_id" : False,
+            "customer_id" : False
             }
 
         if categories == []:
             
-            flags["description"] = True
+            flags["advisor_id"] = True
+            flags["customer_id"] = True
             portfolios_desc = self.description(ids=ids)
             final_keys = portfolios_desc.keys()
 
