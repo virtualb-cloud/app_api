@@ -43,21 +43,21 @@ class Insert_controller:
             for item in customer_ids:
                 self.customer_ids.append(item[0])
 
-        # portfolio id
+        # advisor id
 
         query = f'''
-        SELECT portfolio_id
-        FROM {self.schema_name}.link_portfolio
+        SELECT advisor_id
+        FROM {self.schema_name}.hub_advisor
         '''
     
         response = self.engine.connect().execute(query)
-        portfolio_ids = response.fetchall()
+        advisor_ids = response.fetchall()
 
-        self.portfolio_ids = []
-        if portfolio_ids == None: self.portfolio_ids = []
+        self.advisor_ids = []
+        if advisor_ids == None: self.advisor_ids = []
         else:
-            for item in portfolio_ids:
-                self.portfolio_ids.append(item[0])
+            for item in advisor_ids:
+                self.advisor_ids.append(item[0])
 
 
     def first_necessary_keys_controller(self, portfolio:dict):
@@ -119,10 +119,10 @@ class Insert_controller:
                     flag = False
                     errors += f"customer_id '{portfolio['description'][key]}' does not exist in db. " 
             
-            if key == "portfolio_id":
-                if not portfolio["description"][key] in self.portfolio_ids:
+            if key == "advisor_id":
+                if not portfolio["description"][key] in self.advisor_ids:
                     flag = False
-                    errors += f"portfolio_id '{portfolio['description'][key]}' does not exist in db. " 
+                    errors += f"advisor_id '{portfolio['description'][key]}' does not exist in db. " 
 
         return flag, errors
 

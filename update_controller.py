@@ -25,6 +25,21 @@ class Update_controller:
         else:
             for item in portfolio_ids:
                 self.portfolio_ids.append(item[0])
+
+        # advisor_id
+        query = f'''
+        SELECT advisor_id
+        FROM {self.schema_name}.hub_advisor
+        '''
+    
+        response = self.engine.connect().execute(query)
+        advisor_ids = response.fetchall()
+
+        self.advisor_ids = []
+        if advisor_ids == None: self.advisor_ids = []
+        else:
+            for item in advisor_ids:
+                self.advisor_ids.append(item[0])
     
     def first_necessary_keys_controller(self, portfolio:dict):
 
@@ -78,6 +93,16 @@ class Update_controller:
             elif not type(portfolio["description"][key]) in [str]:
                 flag = False
                 errors += "try sending a string as description dictionary values. "
+
+            if key == "customer_id" :
+                flag = False
+                errors += "customer_id is not updatable, try creating a new portfolio. "
+
+            if key == "advisor_id" :
+                if not portfolio["description"][key] in self.advisor_ids:
+                    flag = False
+                    errors += f"advisor_id '{portfolio['description'][key]}' does not exist in db. "
+
 
         return flag, errors
 
