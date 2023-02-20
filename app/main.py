@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
-from read_customers import Read
-from read_controller import Read_controller
-from insert_customers import Insert
-from insert_controller import Insert_controller
-from delete_customers import Delete
-from delete_controller import Delete_controller
-from update_customers import Update
-from update_controller import Update_controller
+from app.read_customers import Read
+from app.read_controller import Read_controller
+from app.insert_customers import Insert
+from app.insert_controller import Insert_controller
+from app.delete_customers import Delete
+from app.delete_controller import Delete_controller
+from app.update_customers import Update
+from app.update_controller import Update_controller
 
 
 # Config
