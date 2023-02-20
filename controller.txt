@@ -1,4 +1,0 @@
-1- body: people: list of persons
-2- person : dict
-    mandatory keys: "id", "sociodemographics"
-    optional keys: "cultures", "status", "
