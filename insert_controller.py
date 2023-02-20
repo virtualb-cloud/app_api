@@ -43,22 +43,23 @@ class Insert_controller:
             for item in customer_ids:
                 self.customer_ids.append(item[0])
 
-        # advisor id
+        # portfolio id
 
         query = f'''
-        SELECT advisor_id
-        FROM {self.schema_name}.hub_advisor
+        SELECT portfolio_id
+        FROM {self.schema_name}.hub_portfolio
         '''
     
         response = self.engine.connect().execute(query)
-        advisor_ids = response.fetchall()
+        portfolio_ids = response.fetchall()
 
-        self.advisor_ids = []
-        if advisor_ids == None: self.advisor_ids = []
+        self.portfolio_ids = []
+        if portfolio_ids == None: self.portfolio_ids = []
         else:
-            for item in advisor_ids:
-                self.advisor_ids.append(item[0])
-   
+            for item in portfolio_ids:
+                self.portfolio_ids.append(item[0])
+
+
     def first_necessary_keys_controller(self, portfolio:dict):
 
         # flag & errors
@@ -66,7 +67,7 @@ class Insert_controller:
         errors = ""
 
         mandatory_keys = [
-            "id", "customer_id", "advisor_id"
+            "id"
         ]
         # controll 
         for key in mandatory_keys:
@@ -79,16 +80,52 @@ class Insert_controller:
             flag = False
             errors += f"portfolio_id '{portfolio['id']}' exists in db, use update instead. " 
 
-        elif not portfolio["customer_id"] in self.customer_ids:
-            flag = False
-            errors += f"customer_id '{portfolio['customer_id']}' does not exist in db. " 
-
-        elif not portfolio["advisor_id"] in self.advisor_ids:
-            flag = False
-            errors += f"advisor_id '{portfolio['advisor_id']}' does not exist in db. " 
 
         return flag, errors
-    
+
+    def first_optional_keys_controller(self, portfolio:dict):
+
+        flags = {
+            "description" : False
+            } 
+
+        if "description" in portfolio.keys(): flags["description"] = True
+
+        return flags
+        
+    def description_keys_controller(self, portfolio:dict):
+        
+        # mandatory variables
+        optional_keys = [
+            "customer_id", "advisor_id"
+        ]
+
+        # flag & errors
+        flag = True
+        errors = ""
+
+        for key in portfolio["description"].keys():
+
+            if not key in optional_keys:
+                flag = False
+                errors += f"try sending '{optional_keys}' as description dictionary keys. "
+
+            elif not type(portfolio["description"][key]) in [str]:
+                flag = False
+                errors += "try sending a string value as description dictionary values. "
+            
+            if key == "customer_id":
+                if not portfolio["description"][key] in self.customer_ids:
+                    flag = False
+                    errors += f"customer_id '{portfolio['description'][key]}' does not exist in db. " 
+            
+            if key == "portfolio_id":
+                if not portfolio["description"][key] in self.portfolio_ids:
+                    flag = False
+                    errors += f"portfolio_id '{portfolio['description'][key]}' does not exist in db. " 
+
+        return flag, errors
+
     def run(self, portfolios:list):
 
         # flag & errors
@@ -107,7 +144,7 @@ class Insert_controller:
                 errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
                 return flag, errors
             
-            all_keys = ["id", "customer_id", "advisor_id"]
+            all_keys = ["id", "description"]
             for key in portfolio.keys():
                 if not key in all_keys:
                     flag = False
@@ -119,5 +156,13 @@ class Insert_controller:
             if not flag: 
                 errors += errs
                 return flag, errors
+
+            flags = self.first_optional_keys_controller(portfolio=portfolio)
+            
+            if flags["description"]:
+                flag, errs = self.description_keys_controller(portfolio=portfolio)
+                if not flag: 
+                    errors += errs
+                    return flag, errors
 
         return flag, errors

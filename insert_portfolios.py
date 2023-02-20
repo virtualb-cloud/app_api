@@ -30,7 +30,9 @@ class Insert:
 
             # control keys
             for key in keys_list:
-                add_statement += f''' '{portfolio[key]}','''
+
+                
+                add_statement += f''' '{portfolio["description"][key]}','''
 
             # to exclude the last ","
             query = query + add_statement[:-1] + "),"
@@ -45,6 +47,7 @@ class Insert:
 
     def run(self, portfolios:list):
 
+        
         self.insert_portfolios(portfolios=portfolios)
         print("description pushed")
 
