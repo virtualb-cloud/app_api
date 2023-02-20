@@ -22,7 +22,7 @@ class Update:
 
         # control keys
         keys_list = [
-            "advisor_id"
+            "advisor_id", "customer_id"
         ]
 
         for key in keys_list:
