@@ -13,7 +13,7 @@ class Insert:
         
         # prepare fixed query
         query = f'''
-            INSERT INTO {self.schema_name}.hub_portfolio(
+            INSERT INTO {self.schema_name}.link_portfolio(
                 portfolio_id, customer_id, advisor_id
             )
             VALUES '''

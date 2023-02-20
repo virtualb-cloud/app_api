@@ -13,7 +13,7 @@ class Read:
         query = f'''
         SELECT portfolio_id, advisor_id, customer_id
 
-        FROM {self.schema_name}.hub_portfolio
+        FROM {self.schema_name}.link_portfolio
         '''
         if ids == []:
             query = query 

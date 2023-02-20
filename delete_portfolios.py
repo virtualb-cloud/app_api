@@ -15,14 +15,14 @@ class Delete:
         if len(ids) == 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.hub_portfolio
+            DELETE FROM {self.schema_name}.link_portfolio
             WHERE portfolio_id = '{ids[0]}'
             '''
 
         elif len(ids) >= 1:
 
             query = f'''
-            DELETE FROM {self.schema_name}.hub_portfolio
+            DELETE FROM {self.schema_name}.link_portfolio
             WHERE portfolio_id in {tuple(ids)}
             '''
 

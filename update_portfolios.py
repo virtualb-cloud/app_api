@@ -13,7 +13,7 @@ class Update:
         
         # fixed query
         fixed_query = f'''
-        UPDATE {self.schema_name}.hub_portfolio
+        UPDATE {self.schema_name}.link_portfolio
         SET 
         '''
         set_query = ""

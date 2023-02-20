@@ -15,7 +15,7 @@ class Insert_controller:
 
         query = f'''
         SELECT portfolio_id
-        FROM {self.schema_name}.hub_portfolio
+        FROM {self.schema_name}.link_portfolio
         '''
     
         response = self.engine.connect().execute(query)
@@ -47,7 +47,7 @@ class Insert_controller:
 
         query = f'''
         SELECT portfolio_id
-        FROM {self.schema_name}.hub_portfolio
+        FROM {self.schema_name}.link_portfolio
         '''
     
         response = self.engine.connect().execute(query)
