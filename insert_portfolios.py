@@ -26,13 +26,20 @@ class Insert:
             
             portfolio_id = portfolio["id"]
 
-            add_statement = f'''('{portfolio_id}','''
+            # check
+            if not "description" in portfolio.keys(): portfolio["description"] = {}
+            
+            record = portfolio["description"]
 
+            add_statement = f'''('{portfolio_id}','''
+            
             # control keys
             for key in keys_list:
-
-                
-                add_statement += f''' '{portfolio["description"][key]}','''
+                if not key in record.keys(): 
+                    record[key] = "NULL"
+                    add_statement += f''' {record[key]},'''
+                else:
+                    add_statement += f''' '{record[key]}','''
 
             # to exclude the last ","
             query = query + add_statement[:-1] + "),"

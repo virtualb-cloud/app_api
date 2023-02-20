@@ -37,7 +37,7 @@ class Read_controller:
         errors = ""
 
         first_keys = ["ids"]
-        categories = ["advisor_id", "client_id"]
+        categories = ["description"]
 
         for key in first_keys:
             

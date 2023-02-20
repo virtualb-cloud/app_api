@@ -49,14 +49,12 @@ class Read:
         categories = body["categories"]
 
         flags = {
-            "advisor_id" : False,
-            "customer_id" : False
+            "description" : False
             }
 
         if categories == []:
             
-            flags["advisor_id"] = True
-            flags["customer_id"] = True
+            flags["description"] = True
             portfolios_desc = self.description(ids=ids)
             final_keys = portfolios_desc.keys()
 

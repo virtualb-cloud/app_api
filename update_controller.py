@@ -58,7 +58,7 @@ class Update_controller:
         
         # mandatory variables
         optional_keys = [
-            "classification_index", "qualification_index", "diversification_index"
+            "customer_id", "advisor_id"
         ]
 
         # flag & errors
@@ -75,7 +75,7 @@ class Update_controller:
                 flag = False
                 errors += f"try sending only '{optional_keys}' as description dictionary keys. "
 
-            elif not type(portfolio["description"][key]) in [int, float]:
+            elif not type(portfolio["description"][key]) in [str]:
                 flag = False
                 errors += "try sending a string as description dictionary values. "
 
@@ -99,7 +99,7 @@ class Update_controller:
                 errors += "try sending a body [{rescord1}, ..., {rescordn}]. "
                 return flag, errors
             
-            all_keys = ["id", "description", "cultures", "assets", "needs"]
+            all_keys = ["id", "description"]
             for key in portfolio.keys():
                 if not key in all_keys:
                     flag = False
