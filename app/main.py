@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify
+from threading import Thread
+
+from app.background_tasks import deleter, inserter, updater
 from app.read_customers import Read
 from app.read_controller import Read_controller
-from app.insert_customers import Insert
 from app.insert_controller import Insert_controller
-from app.delete_customers import Delete
 from app.delete_controller import Delete_controller
-from app.update_customers import Update
 from app.update_controller import Update_controller
 
 
@@ -43,12 +43,11 @@ def insert_customers():
         flag, errors = controller.run(customers=body)
         if not flag: return jsonify(errors), 422
 
-        try:
-            insert = Insert()
-            answer = insert.run(customers=body)
-        except:
-            answer = []
-        return jsonify(answer), 200
+        thread = Thread(target=inserter, args=(body,))
+        thread.daemon = True
+        thread.start()
+
+        return "inserting done successfully", 200
 
 @app.route("/update_customers", methods=["PATCH"])
 def update_customers():
@@ -62,15 +61,14 @@ def update_customers():
         flag, errors = controller.run(customers=body)
         if not flag: return jsonify(errors), 422
 
-        try:
-            update = Update()
-            answer = update.run(customers=body)
-        except:
-            answer = []
-        return jsonify(answer), 200
+        thread = Thread(target=updater, args=(body,))
+        thread.daemon = True
+        thread.start()
 
-@app.route("/questionnaire_interpreter", methods=["DELETE"])
-def questionnaire_interpreter():
+        return "updating done successfully", 200
+
+@app.route("/delete_customers", methods=["DELETE"])
+def delete_customers():
     
     if request.method == "DELETE":
 
@@ -81,9 +79,9 @@ def questionnaire_interpreter():
         flag, errors = controller.run(body=body)
         if not flag: return jsonify(errors), 422
 
-        try:
-            delete = Delete()
-            answer = delete.run(body=body)
-        except:
-            answer = []
-        return jsonify(answer), 200
+        thread = Thread(target=deleter, args=(body,))
+        thread.daemon = True
+        thread.start()
+
+        return "deleting done successfully", 200
+
