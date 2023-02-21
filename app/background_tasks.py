@@ -9,16 +9,16 @@ def deleter(body:list):
     if response: return True
     else: return False
 
-def updater(body:dict):
+def updater(body:list):
     
     updater = Update()
-    response = updater.run(body=body)
+    response = updater.run(customers=body)
     if response: return True
     else: return False
 
-def inserter(samples:list):
+def inserter(body:list):
     
     inserter = Insert()
-    response = inserter.run(body=samples)
+    response = inserter.run(customers=body)
     if response: return True
     else: return False
