@@ -196,13 +196,6 @@ class Update_controller:
             elif (product["needs"][key] < 0) | (product["needs"][key] > 1): 
                 flag = False
                 errors += f"try sending a value in [0, 1] range as needs dictionary values. "
-            else:
-                sum += product["needs"][key]
-                
-        # last check
-        if sum != 1:
-            flag = False
-            errors += f"needs should sum up to one. "
 
         return flag, errors
 

@@ -198,14 +198,6 @@ class Insert_controller:
                 flag = False
                 errors += f"try sending a value in [0, 1] range as needs dictionary values. "
 
-
-
-
-
-
-
-
-
         return flag, errors
 
     def run(self, products:list):
