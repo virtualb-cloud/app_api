@@ -151,7 +151,7 @@ class Insert_controller:
         
         # optional variables
         optional_keys = [
-            "financial_horizon_index", "finacial_litteracy_index", 
+            "financial_horizon_index", "financial_litteracy_index", 
             "financial_experience_index", "objective_risk_propensity_index", 
             "subjective_risk_propensity_index", "esg_propensity_index",
             "life_quality_index", "sophisticated_instrument", "marginality_index"
