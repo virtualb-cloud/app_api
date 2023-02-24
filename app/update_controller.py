@@ -235,7 +235,7 @@ class Update_controller:
             "capital_accumulation_investment_need", "capital_protection_investment_need", 
             "liquidity_investment_need", "income_investment_need",
             "retirement_investment_need", "heritage_investment_need",
-            "health_incurance_need", "home_insurance_need",
+            "health_insurance_need", "home_insurance_need",
             "longterm_care_insurance_need", "payment_financing_need",
             "loan_financing_need", "mortgage_financing_need"
         ]
